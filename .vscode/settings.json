@@ -1,5 +1,17 @@
 {
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
-  "editor.detectIndentation": false
+  "editor.detectIndentation": false,
+
+  "files.exclude":{
+    "**/.git": true,
+    "node_modules/": true,
+    "coverage/": true,
+  },
+
+  "[feature]": {
+    "editor.formatOnType": true,
+    "editor.formatOnSave": true,
+  },
+  "jest.jestCommandLine": "npx jest"
 }

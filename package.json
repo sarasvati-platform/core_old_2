@@ -1,12 +1,13 @@
+
 {
   "name": "@sarasvati-platform/core",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "version": "0.0.1",
   "description": "Core library for the Sarasvati Platform",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sarasvati-platform/core.git"
@@ -16,7 +17,26 @@
     "url": "https://github.com/sarasvati-platform/core/issues"
   },
   "homepage": "https://github.com/sarasvati-platform/core#readme",
-  "dependencies": {
+  "devDependencies": {
+    "@stryker-mutator/core": "^5.6.1",
+    "@stryker-mutator/jest-runner": "^5.6.1",
+    "@stryker-mutator/typescript-checker": "^5.6.1",
+    "@types/jest": "^27.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
+    "@typescript-eslint/parser": "^5.10.1",
+    "eslint": "^8.7.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "jest": "^27.4.7",
+    "jest-cucumber": "^3.0.1",
+    "ts-jest": "^27.1.3",
+    "ts-node": "^10.4.0",
     "typescript": "^4.5.5"
+  },
+  "scripts": {
+    "test": "jest",
+    "mtest": "stryker run",
+    "lint": "eslint . --ext .ts"
   }
 }
