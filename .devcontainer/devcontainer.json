@@ -18,5 +18,6 @@
         "stackbreak.comment-divider",
         "bierner.markdown-mermaid",
         "yzhang.markdown-all-in-one"
-    ]
+    ],
+    "postCreateCommand": ".devcontainer/bootstrap.sh"
 }
