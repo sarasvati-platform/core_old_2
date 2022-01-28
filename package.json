@@ -1,0 +1,22 @@
+{
+  "name": "@sarasvati-platform/core",
+  "version": "0.0.1",
+  "description": "Core library for the Sarasvati Platform",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sarasvati-platform/core.git"
+  },
+  "author": "Advaita Krishna das",
+  "bugs": {
+    "url": "https://github.com/sarasvati-platform/core/issues"
+  },
+  "homepage": "https://github.com/sarasvati-platform/core#readme",
+  "dependencies": {
+    "typescript": "^4.5.5"
+  }
+}
