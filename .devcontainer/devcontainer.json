@@ -1,23 +1,23 @@
 {
-    "name": "Sarasvati Core",
-    "dockerFile": "Dockerfile",
-    "workspaceFolder": "/sarasvati/core",
-    "settings": {
-        "githubIssues.issueBranchTitle": "${user}/issue${issueNumber}"
-    },
-    "extensions": [
-        "eamodio.gitlens",
-        "github.vscode-pull-request-github",
-        "orta.vscode-jest",
-        "hbenl.vscode-test-explorer",
-        "alexkrechik.cucumberautocomplete",
-        "dbaeumer.vscode-eslint",
-        "howardzuo.vscode-npm-dependency",
-        "eg2.vscode-npm-script",
-        "aaron-bond.better-comments",
-        "stackbreak.comment-divider",
-        "bierner.markdown-mermaid",
-        "yzhang.markdown-all-in-one"
-    ],
-    "postCreateCommand": ".devcontainer/bootstrap.sh"
+  "name": "Sarasvati Core",
+  "dockerFile": "Dockerfile",
+  "workspaceFolder": "/sarasvati/core",
+  "settings": {
+    "githubIssues.issueBranchTitle": "${user}/issue${issueNumber}"
+  },
+  "extensions": [
+    "eamodio.gitlens",
+    "github.vscode-pull-request-github",
+    "orta.vscode-jest",
+    "hbenl.vscode-test-explorer",
+    "alexkrechik.cucumberautocomplete",
+    "dbaeumer.vscode-eslint",
+    "howardzuo.vscode-npm-dependency",
+    "eg2.vscode-npm-script",
+    "aaron-bond.better-comments",
+    "stackbreak.comment-divider",
+    "bierner.markdown-mermaid",
+    "yzhang.markdown-all-in-one"
+  ],
+  "postCreateCommand": ".devcontainer/bootstrap.sh"
 }
