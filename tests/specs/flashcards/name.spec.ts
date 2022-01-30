@@ -2,12 +2,34 @@ import { Name } from '@src/flashcards/models/name'
 
 describe('The Name instance', () => {
 
-  describe('when initialized', () => {
+  describe('when initializing', () => {
     test('should throw an error if the name is an empty string', () => {
       const errorMessage = 'The name must be a non-empty string'
       expect(() => new Name('')).toThrow(errorMessage)
     })
 
+    test('should throw an error if the name is a string with spaces only', () => {
+      const errorMessage = 'The name must be a non-empty string'
+      expect(() => new Name(' ')).toThrow(errorMessage)
+    })
+
+    test('should throw an error if name is a string with new line', () => {
+      const errorMessage = 'The name must not contain new line'
+      expect(() => new Name('\n')).toThrow(errorMessage)
+    })
+
+    test('should throw an error if the name is a string with caret return', () => {
+      const errorMessage = 'The name must not contain caret return'
+      expect(() => new Name('\r')).toThrow(errorMessage)
+    })
+
+    test('should throw an error if the name is a string with tabs', () => {
+      const errorMessage = 'The name must not contain tabs'
+      expect(() => new Name('\t')).toThrow(errorMessage)
+    })
+  })
+
+  describe('when initialized', () => {
     test('should return name by property', () => {
       const nameValue = 'test'
       const name = new Name(nameValue)
