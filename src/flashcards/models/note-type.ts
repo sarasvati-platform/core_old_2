@@ -1,18 +1,29 @@
 import { Name } from '@src/flashcards/models/name'
 
 export class NoteType {
-  public readonly name: NoteTypeName
+  protected _name: NoteTypeName
 
   /**
    * Creates a new instance of the NoteType class
    * @param name Name of the note type
    */
-  constructor(name: NoteTypeName | string) {
-    if (typeof name === 'string') {
-      this.name = new NoteTypeName(name)
-    } else {
-      this.name = name
-    }
+  constructor(name: NoteTypeName) {
+    this._name = name
+  }
+
+  /**
+   * Returns the name of the note type
+   */
+  get name(): NoteTypeName {
+    return this._name
+  }
+
+  /**
+   * Renames note type
+   * @param name New name of the note type
+   */
+  rename(name: NoteTypeName) {
+    this._name = name
   }
 }
 
