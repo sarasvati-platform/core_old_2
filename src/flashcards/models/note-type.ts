@@ -1,21 +1,17 @@
+import { Entity } from '@src/core/models/entity'
 import { Identity } from '@src/core/models/identity'
 import { Name } from '@src/flashcards/models/name'
 
-export class NoteType {
+export class NoteType extends Entity {
   protected _name: NoteTypeName
-  protected _identity: Identity
 
   /**
    * Creates a new instance of the NoteType class
    * @param name Name of the note type
    */
-  constructor(id: Identity, name: NoteTypeName) {
-    this._identity = id
+  constructor(identity: Identity, name: NoteTypeName) {
+    super(identity)
     this._name = name
-  }
-
-  get identity(): Identity {
-    return this._identity
   }
 
   /**
