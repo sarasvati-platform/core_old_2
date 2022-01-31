@@ -12,5 +12,10 @@
   "checkers": [
     "typescript"
   ],
-  "tsconfigFile": "tsconfig.json"
+  "tsconfigFile": "tsconfig.json",
+  "thresholds": {
+    "high": 80,
+    "low": 60,
+    "break": 100
+  }
 }

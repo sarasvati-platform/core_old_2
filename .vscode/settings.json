@@ -8,6 +8,7 @@
     "node_modules/": true,
     "coverage/": true,
     "reports/": true,
+    ".stryker-tmp": true
   },
 
   /* -------------------------------------------------------------------------- */
