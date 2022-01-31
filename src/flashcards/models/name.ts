@@ -9,9 +9,6 @@ export class Name {
     if (value.includes('\t')) {
       throw new Error('The name must not contain tabs')
     }
-    if (!value) {
-      throw new Error('The name must be a non-empty string')
-    }
     if (value.trim() === '') {
       throw new Error('The name must be a non-empty string')
     }
