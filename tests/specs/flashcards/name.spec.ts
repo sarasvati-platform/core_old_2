@@ -58,5 +58,4 @@ describe('The Name instance', () => {
       expect(name.toString()).toBe(nameValue)
     })
   })
-
 })

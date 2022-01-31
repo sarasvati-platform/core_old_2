@@ -1,14 +1,21 @@
+import { Identity } from '@src/core/models/identity'
 import { Name } from '@src/flashcards/models/name'
 
 export class NoteType {
   protected _name: NoteTypeName
+  protected _identity: Identity
 
   /**
    * Creates a new instance of the NoteType class
    * @param name Name of the note type
    */
-  constructor(name: NoteTypeName) {
+  constructor(id: Identity, name: NoteTypeName) {
+    this._identity = id
     this._name = name
+  }
+
+  get identity(): Identity {
+    return this._identity
   }
 
   /**
