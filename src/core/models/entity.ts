@@ -5,10 +5,10 @@ export abstract class Entity {
 
   /**
    * Initializes the new instance of the Entity class
-   * @param identity Identity. Will be generated if nothing is provided
+   * @param identity Identity of the Entity
    */
-  constructor(identity?: Identity) {
-    this._identity = identity || new Identity()
+  constructor(identity: Identity) {
+    this._identity = identity
   }
 
   /**

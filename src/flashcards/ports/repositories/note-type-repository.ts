@@ -17,4 +17,10 @@ export interface INoteTypeRepository {
    * @returns Note type or undefined if not found
    */
   find(identity: Identity): NoteType | undefined
+
+  /**
+   * Deletes the note type by identity
+   * @param identity Identity of the note type
+   */
+  delete(identity: Identity): void
 }
