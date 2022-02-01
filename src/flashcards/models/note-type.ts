@@ -1,9 +1,10 @@
-import { Entity } from '@src/core/models/entity'
-import { Identity } from '@src/core/models/identity'
-import { Name } from '@src/flashcards/models/name'
+import { Entity, Identity } from '@src/core/models'
+import { NoteField } from '@src/flashcards/models'
+import { Name } from '@src/flashcards/models'
 
 export class NoteType extends Entity {
   protected _name: NoteTypeName
+  protected _fields: NoteField[] = []
 
   /**
    * Creates a new instance of the NoteType class
@@ -27,6 +28,29 @@ export class NoteType extends Entity {
    */
   rename(name: NoteTypeName) {
     this._name = name
+  }
+
+  /**
+   * Adds a new field to the note type
+   * @param field Field to add
+   */
+  addField(field: NoteField) {
+    const isExistWithSameName = this._fields.some(
+      f => f.name.value === field.name.value
+    )
+    if (isExistWithSameName) {
+      throw new Error(`Field with name '${field.name.value}' already exists`)
+    }
+
+    this._fields.push(field)
+  }
+
+  /**
+   * Returns the fields of the note type
+   * @returns Fields of the note type
+   */
+  get fields(): readonly NoteField[] {
+    return this._fields
   }
 }
 

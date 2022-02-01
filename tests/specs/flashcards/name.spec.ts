@@ -1,4 +1,4 @@
-import { Name } from '@src/flashcards/models/name'
+import { Name } from '@src/flashcards/models'
 
 describe('The Name instance', () => {
 
