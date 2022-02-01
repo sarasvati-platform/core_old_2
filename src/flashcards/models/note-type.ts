@@ -30,7 +30,14 @@ export class NoteType extends Entity {
   }
 }
 
+/**
+ * Note type name
+ */
 export class NoteTypeName extends Name {
+  /**
+   * Initializes a new instance of the NoteTypeName class
+   * @param name Name of the note type
+   */
   constructor(name: string) {
     super(name)
   }
