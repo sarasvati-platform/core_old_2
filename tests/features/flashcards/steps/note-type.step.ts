@@ -14,6 +14,10 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
     context.noteTypeRepository.save(noteType)
   })
 
+  when(/^User deletes '(.*)' note type$/, (noteTypeName) => {
+    context.noteTypeRepository.delete(new Identity(noteTypeName))
+  })
+
   /* -------------------------------------------------------------------------- */
   /*                                    Then                                    */
   /* -------------------------------------------------------------------------- */
@@ -26,5 +30,10 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
       expect(noteType).toBeDefined()
       expect(noteType?.name.value).toEqual(noteTypeRow['Note Type'])
     }
+  })
+
+  then(/^User has no '(.*)' note type$/, (noteTypeName) => {
+    const noteType = context.noteTypeRepository.find(new Identity(noteTypeName))
+    expect(noteType).toBeUndefined()
   })
 }

@@ -12,4 +12,8 @@ export class FakeNoteTypeRepository implements INoteTypeRepository {
   public find(identity: Identity): NoteType | undefined {
     return this.noteTypes.get(identity.value)
   }
+
+  public delete(identity: Identity): void {
+    this.noteTypes.delete(identity.value)
+  }
 }
