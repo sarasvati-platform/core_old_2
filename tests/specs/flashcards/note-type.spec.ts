@@ -56,11 +56,14 @@ describe('The NoteType instance', () => {
 
     test('should throw an error if the field name is already used', () => {
       const noteType = new NoteType(new Identity(), new NoteTypeName('name'))
-      const field = new NoteField(new NoteFieldName('field'))
-      const field2 = new NoteField(new NoteFieldName('field'))
+      const field1 = new NoteField(new NoteFieldName('field1'))
+      const field2 = new NoteField(new NoteFieldName('field_same'))
+      const field3 = new NoteField(new NoteFieldName('field_same'))
 
-      noteType.addField(field)
-      expect(() => noteType.addField(field2)).toThrow('Field with name \'field\' already exists')
+      noteType.addField(field1)
+      noteType.addField(field2)
+      expect(() => noteType.addField(field3)).toThrow('Field with name \'field_same\' already exists')
+      expect(noteType.fields.length).toEqual(2)
     })
   })
 })
