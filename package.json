@@ -39,6 +39,7 @@
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
+    "@sarasvati-platform/abstract-query": "github:sarasvati-platform/abstract-query",
     "uuid": "^8.3.2"
   }
 }
