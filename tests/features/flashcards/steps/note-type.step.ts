@@ -20,7 +20,7 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
   })
 
   when(/^User renames '(.*)' note type to '(.*)'$/, (noteTypeName, newNoteTypeName) => {
-    const noteType = context.noteTypeRepository.find(new Identity(noteTypeName))
+    const noteType = context.noteTypeRepository.get(new Identity(noteTypeName))
     if (!noteType) { throw new Error(`Note type '${noteTypeName}' not found`) }
 
     noteType.rename(new NoteTypeName(newNoteTypeName))
@@ -28,7 +28,7 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
   })
 
   when(/^User adds '(.*)' field to '(.*)' note type$/, (fieldName, noteTypeName) => {
-    const noteType = context.noteTypeRepository.find(new Identity(noteTypeName))
+    const noteType = context.noteTypeRepository.get(new Identity(noteTypeName))
     if (!noteType) { throw new Error(`Note type '${noteTypeName}' not found`) }
 
     const field = new NoteField(new NoteFieldName(fieldName))
@@ -43,7 +43,7 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
   then(/^User has the following note types:$/, (noteTypeTable) => {
     for (const noteTypeRow of noteTypeTable) {
       const identity = new Identity(noteTypeRow['Note Type'])
-      const noteType = context.noteTypeRepository.find(identity)
+      const noteType = context.noteTypeRepository.get(identity)
 
       expect(noteType).toBeDefined()
       expect(noteType?.name.value).toEqual(noteTypeRow['Note Type'])
@@ -51,12 +51,12 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
   })
 
   then(/^User has no '(.*)' note type$/, (noteTypeName) => {
-    const noteType = context.noteTypeRepository.find(new Identity(noteTypeName))
+    const noteType = context.noteTypeRepository.get(new Identity(noteTypeName))
     expect(noteType).toBeUndefined()
   })
 
   then(/^Note type '(.*)' has '(.*)' field$/, (noteTypeName, fieldName) => {
-    const noteType = context.noteTypeRepository.find(new Identity(noteTypeName))
+    const noteType = context.noteTypeRepository.get(new Identity(noteTypeName))
     if (!noteType) { throw new Error(`Note type '${noteTypeName}' not found`) }
 
     const count = noteType.fields.filter(field => field.name.value === fieldName).length
