@@ -35,3 +35,33 @@ Feature: Flashcards / Manage Collection / Note Type
     When User creates 'Foreign Word' note type
     And User adds 'Word' field to 'Foreign Word' note type
     Then Note type 'Foreign Word' has 'Word' field
+
+  Rule: Field names are case insensitive and must not contain special characters
+
+    The field name must be unique (not case sensitive) within the note type.
+    Since the field names are used in templates to generate cards, note names
+    must not contain special characters like curly braces, newlines, and tabs.
+
+    Background:
+      When User creates 'Foreign Word' note type
+      And User adds 'Word' field to 'Foreign Word' note type
+
+    Scenario: User cannot add a field with the same name
+      And User adds 'Word' field to 'Foreign Word' note type
+      Then User sees an error "Field with name 'Word' already exists"
+
+    Scenario: User cannot add a field with the same name in a different case
+      When User adds 'WORD' field to 'Foreign Word' note type
+      Then User sees an error "Field with name 'WORD' already exists"
+
+    Scenario Outline: User cannot add field with special characters
+      When User adds '<Field>' field to 'Foreign Word' note type
+      Then User sees an error '<Error>'
+
+      Examples:
+        | Field           | Error                               |
+        |                 | The name must be a non-empty string |
+        | Wrong {         | The name must not contain { or }    |
+        | Wrong }         | The name must not contain { or }    |
+        | Wrong <newline> | The name must not contain new line  |
+        | Wrong <tab>     | The name must not contain tabs      |

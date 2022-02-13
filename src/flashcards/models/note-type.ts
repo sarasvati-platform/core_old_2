@@ -36,7 +36,7 @@ export class NoteType extends Entity {
    */
   addField(field: NoteField) {
     const isExistWithSameName = this._fields.some(
-      f => f.name.value === field.name.value
+      f => f.name.value.toLocaleLowerCase() === field.name.value.toLocaleLowerCase()
     )
     if (isExistWithSameName) {
       throw new Error(`Field with name '${field.name.value}' already exists`)

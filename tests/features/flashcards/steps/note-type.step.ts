@@ -27,12 +27,18 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
     context.noteTypeRepository.save(noteType)
   })
 
-  when(/^User adds '(.*)' field to '(.*)' note type$/, (fieldName, noteTypeName) => {
+  when(/^User adds '(.*)' field to '(.*)' note type$/, (fieldName: string, noteTypeName) => {
     const noteType = context.noteTypeRepository.get(new Identity(noteTypeName))
     if (!noteType) { throw new Error(`Note type '${noteTypeName}' not found`) }
 
-    const field = new NoteField(new NoteFieldName(fieldName))
-    noteType.addField(field)
+    try {
+      fieldName = fieldName.replace('<newline>', '\n').replace('<tab>', '\t')
+      noteType.addField(
+        new NoteField(new NoteFieldName(fieldName))
+      )
+    } catch (e) {
+      context.addError(e)
+    }
     context.noteTypeRepository.save(noteType)
   })
 
