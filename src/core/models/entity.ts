@@ -1,6 +1,11 @@
 import { Identity } from './identity'
 
-export abstract class Entity {
+export interface IEntity {
+  get identity(): Identity
+  equals(other: IEntity): boolean
+}
+
+export abstract class Entity implements IEntity {
   private _identity: Identity
 
   /**
@@ -23,7 +28,7 @@ export abstract class Entity {
    * @param other Entity to compare to
    * @returns True if the Entity is equal to the other Entity
    */
-  equals(other: Entity): boolean {
+  equals(other: IEntity): boolean {
     return this._identity.equals(other.identity)
   }
 }

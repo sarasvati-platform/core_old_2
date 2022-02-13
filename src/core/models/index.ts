@@ -1,4 +1,4 @@
 import { Identity } from '@src/core/models/identity'
-import { Entity } from '@src/core/models/entity'
+import { IEntity, Entity } from '@src/core/models/entity'
 
-export { Identity, Entity }
+export { Identity, IEntity, Entity }
