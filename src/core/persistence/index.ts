@@ -1,3 +1,1 @@
-import { IRepository,IQuery } from '@src/core/persistence/repository'
-
-export { IRepository, IQuery }
+export { IRepository, IQuery } from './repository'

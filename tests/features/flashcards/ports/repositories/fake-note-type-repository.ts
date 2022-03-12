@@ -1,7 +1,6 @@
-import { Identity } from '@src/core/models/identity'
 import { IQuery } from '@src/core/persistence'
-import { NoteType } from '@src/flashcards/models/note-type'
-import { INoteTypeRepository } from '@src/flashcards/ports/repositories/note-type-repository'
+import { NoteType, NoteTypeId } from '@src/flashcards/models'
+import { INoteTypeRepository } from '@src/flashcards/ports/repositories'
 
 export class FakeNoteTypeRepository implements INoteTypeRepository {
   private noteTypes: Map<string, NoteType> = new Map()
@@ -17,16 +16,23 @@ export class FakeNoteTypeRepository implements INoteTypeRepository {
     }
   }
 
-  public get(identity: Identity): NoteType | undefined {
-    return this.noteTypes.get(identity.value)
+  public get(identity: NoteTypeId): NoteType {
+    const value = this.noteTypes.get(identity.value)
+    if (!value) {
+      throw new Error(`Note type '${identity.value}' not found`)
+    }
+    return value
+  }
+
+  public exists(identity: NoteTypeId): boolean {
+    return this.noteTypes.has(identity.value)
   }
 
   public find(query: IQuery): readonly NoteType[] {
     throw new Error('Method not implemented.')
-    // return [...this.noteTypes.values()]
   }
 
-  public delete(identity: Identity): void {
+  public delete(identity: NoteTypeId): void {
     this.noteTypes.delete(identity.value)
   }
 }

@@ -1,6 +1,4 @@
-/**
- * Name
- */
+/** Name */
 export class Name {
   /**
    * Initializes the new instance of the Name class

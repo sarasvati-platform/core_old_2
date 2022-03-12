@@ -1,16 +1,26 @@
 import { Entity, Identity } from '@src/core/models'
-import { NoteField } from '@src/flashcards/models'
-import { Name } from '@src/flashcards/models'
+import { Name, NoteField } from '@src/flashcards/models'
+import { Validate } from '@src/core/validation'
 
-export class NoteType extends Entity {
+export type NoteTypeId = Identity & {'type': 'NoteType'}
+
+/** Note type name */
+export class NoteTypeName extends Name {}
+
+/** Note type */
+export class NoteType extends Entity<NoteTypeId> {
   protected _name: NoteTypeName
   protected _fields: NoteField[] = []
 
   /**
    * Creates a new instance of the NoteType class
    * @param name Name of the note type
+   * @param identity Identity of the note type. Optional.
    */
-  constructor(identity: Identity, name: NoteTypeName) {
+  constructor(
+    name: NoteTypeName,
+    identity: NoteTypeId = new Identity() as NoteTypeId,
+  ) {
     super(identity)
     this._name = name
   }
@@ -31,17 +41,15 @@ export class NoteType extends Entity {
   }
 
   /**
-   * Adds a new field to the note type
+   * Adds a new field to the note type. Field name should be unique.
    * @param field Field to add
    */
   addField(field: NoteField) {
-    const isExistWithSameName = this._fields.some(
-      f => f.name.value.toLocaleLowerCase() === field.name.value.toLocaleLowerCase()
+    Validate.shouldNotContain(
+      field.name.value.toLocaleLowerCase(),
+      this._fields.map(x => x.name.value.toLocaleLowerCase()),
+      `Field with name '${field.name.value}' already exists`
     )
-    if (isExistWithSameName) {
-      throw new Error(`Field with name '${field.name.value}' already exists`)
-    }
-
     this._fields.push(field)
   }
 
@@ -54,15 +62,4 @@ export class NoteType extends Entity {
   }
 }
 
-/**
- * Note type name
- */
-export class NoteTypeName extends Name {
-  /**
-   * Initializes a new instance of the NoteTypeName class
-   * @param name Name of the note type
-   */
-  constructor(name: string) {
-    super(name)
-  }
-}
+

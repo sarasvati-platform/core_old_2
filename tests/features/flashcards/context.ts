@@ -1,4 +1,4 @@
-import { INoteTypeRepository } from '@src/flashcards/ports/repositories/note-type-repository'
+import { INoteTypeRepository } from '@src/flashcards/ports/repositories'
 import { FakeNoteTypeRepository } from './ports/repositories/fake-note-type-repository'
 
 class Context {

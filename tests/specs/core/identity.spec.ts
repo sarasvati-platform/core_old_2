@@ -1,4 +1,4 @@
-import { Identity } from '@src/core/models/identity'
+import { Identity } from '@src/core/models'
 
 describe('The Identity instance', () => {
   describe('when initializing', () => {

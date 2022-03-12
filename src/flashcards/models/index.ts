@@ -1,5 +1,3 @@
-import { Name } from '@src/flashcards/models/name'
-import { NoteField, NoteFieldName } from '@src/flashcards/models/note-field'
-import { NoteType, NoteTypeName } from '@src/flashcards/models/note-type'
-
-export { NoteField, NoteFieldName, NoteType, NoteTypeName, Name }
+export { Name } from './name'
+export { NoteType, NoteTypeName, NoteTypeId } from './note-type/note-type'
+export { NoteField, NoteFieldName } from './note-type/note-field'
