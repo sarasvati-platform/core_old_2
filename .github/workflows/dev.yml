@@ -48,6 +48,7 @@ jobs:
       - run: npm ci --audit=false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Run tests
       - name: Mutational tests
@@ -72,6 +73,7 @@ jobs:
       - run: npm ci --audit=false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Run linter
       - name: Linter
