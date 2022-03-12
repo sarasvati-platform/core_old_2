@@ -72,6 +72,14 @@ describe('The NoteType instance', () => {
       expect(() => noteType.fields.add(field3)).toThrow('Field with name \'field_same\' already exists')
       expect(noteType.fields.all.length).toEqual(2)
     })
+
+    test('should return a field by name', () => {
+      const noteType = new NoteType(new NoteTypeName('name'))
+      const field = new NoteField(new NoteFieldName('field'))
+      noteType.fields.add(field)
+
+      expect(noteType.fields.getByName('field')).toEqual(field)
+    })
   })
 
   describe('when removing a field', () => {
@@ -91,4 +99,6 @@ describe('The NoteType instance', () => {
       expect(() => noteType.fields.remove(field1)).toThrow('Field does not belong to this instance')
     })
   })
+
+
 })
