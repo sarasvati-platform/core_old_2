@@ -10,7 +10,7 @@ export class NoteTypeName extends Name {}
 /** Note type */
 export class NoteType extends Entity<NoteTypeId> {
   protected _name: NoteTypeName
-  protected _fields: NoteField[] = []
+  protected _fields = new NoteFieldsCollection()
 
   /**
    * Creates a new instance of the NoteType class
@@ -41,10 +41,27 @@ export class NoteType extends Entity<NoteTypeId> {
   }
 
   /**
-   * Adds a new field to the note type. Field name should be unique.
-   * @param field Field to add
+   * Returns the fields of the note type
+   * @returns Fields of the note type
    */
-  addField(field: NoteField) {
+  get fields(): NoteFieldsCollection {
+    return this._fields
+  }
+}
+
+
+class NoteFieldsCollection {
+  private _fields: NoteField[] = []
+
+  get all(): readonly NoteField[] {
+    return this._fields
+  }
+
+  getByName(name: string): NoteField | undefined {
+    return this._fields.find(x => x.name.value === name)
+  }
+
+  add(field: NoteField) {
     Validate.shouldNotContain(
       field.name.value.toLocaleLowerCase(),
       this._fields.map(x => x.name.value.toLocaleLowerCase()),
@@ -53,13 +70,21 @@ export class NoteType extends Entity<NoteTypeId> {
     this._fields.push(field)
   }
 
-  /**
-   * Returns the fields of the note type
-   * @returns Fields of the note type
-   */
-  get fields(): readonly NoteField[] {
-    return this._fields
+  remove(field: NoteField) {
+    const index = this._fields.indexOf(field)
+    if (index !== -1) {
+      this._fields.splice(index, 1)
+    } else {
+      throw new Error('Field does not belong to this instance')
+    }
+  }
+
+  removeByName(name: string) {
+    const field = this.getByName(name)
+    if (field) {
+      this.remove(field)
+    } else {
+      throw new Error('Field does not belong to this instance')
+    }
   }
 }
-
-
