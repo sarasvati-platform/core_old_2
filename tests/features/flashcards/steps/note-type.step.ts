@@ -34,10 +34,15 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
     const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
     try {
       fieldName = fieldName.replace('<newline>', '\n').replace('<tab>', '\t')
-      noteType.addField(new NoteField(new NoteFieldName(fieldName)))
+      noteType.fields.add(new NoteField(new NoteFieldName(fieldName)))
     } catch (e) {
       context.addError(e)
     }
+  })
+
+  when(/^User removes '(.*)' field from '(.*)' note type$/, (fieldName: string, noteTypeName: string) => {
+    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
+    noteType.fields.removeByName(fieldName)
   })
 
   /* -------------------------------------------------------------------------- */
@@ -61,9 +66,14 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
 
   then(/^Note type '(.*)' has '(.*)' field$/, (noteTypeName, fieldName) => {
     const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
+    const field = noteType.fields.getByName(fieldName)
+    expect(field).toBeDefined()
+  })
 
-    const count = noteType.fields.filter(field => field.name.value === fieldName).length
-    expect(count).toEqual(1)
+  then(/^Note type '(.*)' has no '(.*)' field$/, (noteTypeName, fieldName) => {
+    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
+    const field = noteType.fields.getByName(fieldName)
+    expect(field).toBeUndefined()
   })
 
   then(/^The result of serach for '(.*)' note type is:$/, (query, resultTable) => {

@@ -57,8 +57,8 @@ describe('The NoteType instance', () => {
       const noteType = new NoteType(new NoteTypeName('name'))
       const field = new NoteField(new NoteFieldName('field'))
 
-      noteType.addField(field)
-      expect(noteType.fields).toEqual([field])
+      noteType.fields.add(field)
+      expect(noteType.fields.all).toEqual([field])
     })
 
     test('should throw an error if the field name is already used', () => {
@@ -67,10 +67,28 @@ describe('The NoteType instance', () => {
       const field2 = new NoteField(new NoteFieldName('field_same'))
       const field3 = new NoteField(new NoteFieldName('field_same'))
 
-      noteType.addField(field1)
-      noteType.addField(field2)
-      expect(() => noteType.addField(field3)).toThrow('Field with name \'field_same\' already exists')
-      expect(noteType.fields.length).toEqual(2)
+      noteType.fields.add(field1)
+      noteType.fields.add(field2)
+      expect(() => noteType.fields.add(field3)).toThrow('Field with name \'field_same\' already exists')
+      expect(noteType.fields.all.length).toEqual(2)
+    })
+  })
+
+  describe('when removing a field', () => {
+    test('should remove field from the instance', () => {
+      const noteType = new NoteType(new NoteTypeName('name'))
+      const field1 = new NoteField(new NoteFieldName('field1'))
+      noteType.fields.add(field1)
+
+      noteType.fields.remove(field1)
+      expect(noteType.fields.all.length).toEqual(0)
+    })
+
+    test('should throw an exception if field does not belog to the instance', () => {
+      const noteType = new NoteType(new NoteTypeName('name'))
+      const field1 = new NoteField(new NoteFieldName('field1'))
+
+      expect(() => noteType.fields.remove(field1)).toThrow('Field does not belong to this instance')
     })
   })
 })

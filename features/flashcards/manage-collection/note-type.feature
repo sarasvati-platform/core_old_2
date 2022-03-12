@@ -72,3 +72,9 @@ Feature: Flashcards / Manage Collection / Note Type
         | Wrong }         | The name must not contain { or }    |
         | Wrong <newline> | The name must not contain new line  |
         | Wrong <tab>     | The name must not contain tabs      |
+
+    Scenario: User can remove fields from the note type
+      When User creates 'Foreign Word' note type
+      And User adds 'Word' field to 'Foreign Word' note type
+      And User removes 'Word' field from 'Foreign Word' note type
+      Then Note type 'Foreign Word' has no 'Word' field

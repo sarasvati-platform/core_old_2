@@ -1,7 +1,7 @@
 import { IRepository } from '@src/core/persistence'
 import { Entity, Identity } from '@src/core/models'
 import { NoteType, NoteTypeId } from '@src/flashcards/models'
-import { Expression, IExpression, Operator } from '@sarasvati-platform/abstract-query'
+import { Expression, Operator } from '@sarasvati-platform/abstract-query'
 
 
 export abstract class FakeRepository<
@@ -27,23 +27,23 @@ export abstract class FakeRepository<
   }
 
   public find(query: Expression | Operator): readonly TEntity[] {
-    const fetch = (q: Expression | Operator, o: TEntity[]): TEntity[] => {
-      if (q instanceof Expression) {
-        if (q.operator === '=') { return o.filter(x => this.getFieldValue(q.field, x) === q.value) }
-      } else if (q instanceof Operator) {
-        if (q.operator === 'and') {
-          const arrays = q.expressions.map(e => fetch(e as Expression, o))
-          return arrays.reduce((a, b) => a.filter(ele => b.includes(ele)))
-        } else if (q.operator === 'or') {
-          return [...new Set(q.expressions.flatMap(e => fetch(e as Expression, o)))]
-        }
-        // if (q.operator === 'or') { return q.expressions.reduce((a, b) => a.concat(fetch(b, a)), o) }
-        // if (q.operator === 'not') { return o.filter(x => !fetch(q.expressions[0], [x]).length) }
-      }
-      return []
-    }
+    const o = Array.from(this.noteTypes.values())
 
-    return fetch(query, Array.from(this.noteTypes.values()))
+    if (query instanceof Expression) {
+      if (query.operator === '=') { return o.filter(x => this.getFieldValue(query.field, x) === query.value) }
+    } else if (query instanceof Operator) {
+      if (query.operator === 'and') {
+        const arrays = query.expressions.map(e => this.find(e as Expression))
+        return arrays.reduce((a, b) => a.filter(ele => b.includes(ele)))
+      } else if (query.operator === 'or') {
+        return [...new Set(query.expressions.flatMap(e => this.find(e as Expression)))]
+      }
+      // if (q.operator === 'or') { return q.expressions.reduce((a, b) => a.concat(fetch(b, a)), o) }
+      // if (q.operator === 'not') { return o.filter(x => !fetch(q.expressions[0], [x]).length) }
+    }
+    return []
+
+    // return fetch(query, Array.from(this.noteTypes.values()))
   }
 
   public delete(identity: TIdentity): void {
