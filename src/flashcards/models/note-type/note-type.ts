@@ -88,11 +88,11 @@ class NoteFieldsCollection {
     }
   }
 
-  getPositionOf(field: NoteField) {
+  getPositionOf(field: NoteField) : number {
     return this._fields.indexOf(field)
   }
 
-  setPositionOf(field: NoteField) {
+  setPositionOf(field: NoteField) : FieldsPositionChanger {
     return new FieldsPositionChanger(field, this._fields)
   }
 }
