@@ -27,8 +27,15 @@ Feature: Flashcards / Manage Collection / Note Type
       | Geography        |
     And User has no 'Foreign Word' note type
 
+  Scenario: User can find note type by name
+    Given User creates 'Geography' note type
+    And User creates 'Foreign Word' note type
+    Then The result of serach for 'Foreign Word' note type is:
+      | Note Type    |
+      | Foreign Word |
+
   # -------------------------------------------------------------------------- #
-  #                                  # fields                                  #
+  #                                    Fields                                  #
   # -------------------------------------------------------------------------- #
 
   Scenario: User can add fields to the note type
