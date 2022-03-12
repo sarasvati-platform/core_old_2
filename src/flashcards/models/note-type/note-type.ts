@@ -87,4 +87,50 @@ class NoteFieldsCollection {
       throw new Error('Field does not belong to this instance')
     }
   }
+
+  getPositionOf(field: NoteField) {
+    return this._fields.indexOf(field)
+  }
+
+  setPositionOf(field: NoteField) {
+    return new FieldsPositionChanger(field, this._fields)
+  }
+}
+
+class FieldsPositionChanger {
+  private _fields: NoteField[] = []
+  private _of: NoteField
+
+  constructor(of: NoteField, fields: NoteField[]) {
+    this._of = of
+    this._fields = fields
+  }
+
+  toTop() {
+    const fromIndex = this._fields.indexOf(this._of)
+    const toIndex = 0
+    this._fields.splice(fromIndex, 1)
+    this._fields.splice(toIndex, 0, this._of)
+  }
+
+  toBottom() {
+    const fromIndex = this._fields.indexOf(this._of)
+    const toIndex = this._fields.length - 1
+    this._fields.splice(fromIndex, 1)
+    this._fields.splice(toIndex, 0, this._of)
+  }
+
+  after(field: NoteField) {
+    const fromIndex = this._fields.indexOf(this._of)
+    const toIndex = this._fields.indexOf(field)
+    this._fields.splice(fromIndex, 1)
+    this._fields.splice(toIndex, 0, this._of)
+  }
+
+  before(field: NoteField) {
+    const fromIndex = this._fields.indexOf(this._of)
+    const toIndex = this._fields.indexOf(field)
+    this._fields.splice(fromIndex, 1)
+    this._fields.splice(toIndex-1, 0, this._of)
+  }
 }

@@ -100,5 +100,65 @@ describe('The NoteType instance', () => {
     })
   })
 
+  describe('when changing a position of field', () => {
+    test('should return a position of field', () => {
+      const noteType = new NoteType(new NoteTypeName('name'))
+      const field1 = new NoteField(new NoteFieldName('field1'))
+      const field2 = new NoteField(new NoteFieldName('field2'))
+      noteType.fields.add(field1)
+      noteType.fields.add(field2)
+
+      expect(noteType.fields.getPositionOf(field1)).toEqual(0)
+      expect(noteType.fields.getPositionOf(field2)).toEqual(1)
+    })
+
+    test('should change a position to top', () => {
+      const noteType = new NoteType(new NoteTypeName('name'))
+      const field1 = new NoteField(new NoteFieldName('field1'))
+      const field2 = new NoteField(new NoteFieldName('field2'))
+      const field3 = new NoteField(new NoteFieldName('field3'))
+      noteType.fields.add(field1)
+      noteType.fields.add(field2)
+      noteType.fields.add(field3)
+
+      noteType.fields.setPositionOf(field3).toTop()
+      expect(noteType.fields.all).toEqual([field3, field1, field2])
+    })
+
+    test('should change a position to bottom', () => {
+      const noteType = new NoteType(new NoteTypeName('name'))
+      const field1 = new NoteField(new NoteFieldName('field1'))
+      const field2 = new NoteField(new NoteFieldName('field2'))
+      const field3 = new NoteField(new NoteFieldName('field3'))
+      noteType.fields.add(field1)
+      noteType.fields.add(field2)
+      noteType.fields.add(field3)
+
+      noteType.fields.setPositionOf(field1).toBottom()
+      expect(noteType.fields.all).toEqual([field2, field3, field1])
+    })
+
+    test('should change a position before field', () => {
+      const noteType = new NoteType(new NoteTypeName('name'))
+      const field1 = new NoteField(new NoteFieldName('field1'))
+      const field2 = new NoteField(new NoteFieldName('field2'))
+      noteType.fields.add(field1)
+      noteType.fields.add(field2)
+
+      noteType.fields.setPositionOf(field2).before(field1)
+      expect(noteType.fields.all).toEqual([field2, field1])
+    })
+
+    test('should change a position after field', () => {
+      const noteType = new NoteType(new NoteTypeName('name'))
+      const field1 = new NoteField(new NoteFieldName('field1'))
+      const field2 = new NoteField(new NoteFieldName('field2'))
+      noteType.fields.add(field1)
+      noteType.fields.add(field2)
+
+      noteType.fields.setPositionOf(field1).after(field2)
+      expect(noteType.fields.all).toEqual([field2, field1])
+    })
+  })
 
 })
