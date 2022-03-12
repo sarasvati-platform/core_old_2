@@ -1,6 +1,7 @@
 import { IQuery } from '@src/core/persistence'
 import { NoteType, NoteTypeId } from '@src/flashcards/models'
 import { INoteTypeRepository } from '@src/flashcards/ports/repositories'
+import { Expression, IExpression, Operator } from '@sarasvati-platform/abstract-query'
 
 export class FakeNoteTypeRepository implements INoteTypeRepository {
   private noteTypes: Map<string, NoteType> = new Map()
@@ -28,8 +29,29 @@ export class FakeNoteTypeRepository implements INoteTypeRepository {
     return this.noteTypes.has(identity.value)
   }
 
-  public find(query: IQuery): readonly NoteType[] {
-    throw new Error('Method not implemented.')
+  public find(query: Expression | Operator): readonly NoteType[] {
+    function getFieldValue(f: string, o: NoteType) {
+      if (f === 'name') { return o.name.value }
+      if (f === 'id') { return o.identity.value }
+    }
+
+    function fetch(q: Expression | Operator | IExpression, o: NoteType[]): NoteType[] {
+      if (q instanceof Expression) {
+        if (q.operator === '=') { return o.filter(x => getFieldValue(q.field, x) === q.value) }
+      } else if (q instanceof Operator) {
+        if (q.operator === 'and') {
+          const arrays = q.expressions.map(e => fetch(e, o))
+          return arrays.reduce((a, b) => a.filter(ele => b.includes(ele)))
+        } else if (q.operator === 'or') {
+          return [...new Set(q.expressions.flatMap(e => fetch(e, o)))]
+        }
+        // if (q.operator === 'or') { return q.expressions.reduce((a, b) => a.concat(fetch(b, a)), o) }
+        // if (q.operator === 'not') { return o.filter(x => !fetch(q.expressions[0], [x]).length) }
+      }
+      return []
+    }
+
+    return fetch(query, Array.from(this.noteTypes.values()))
   }
 
   public delete(identity: NoteTypeId): void {

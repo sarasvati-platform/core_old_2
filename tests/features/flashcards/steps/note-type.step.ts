@@ -3,6 +3,7 @@ import { Identity } from '@src/core/models'
 import { NoteType, NoteTypeId, NoteTypeName } from '@src/flashcards/models'
 import { NoteField, NoteFieldName } from '@src/flashcards/models'
 import { context } from '@tests/features/flashcards/context'
+import { named } from '@src/flashcards/models/note-type/queries'
 
 export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
 
@@ -69,4 +70,15 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
     expect(count).toEqual(1)
   })
 
+  then(/^The result of serach for '(.*)' note type is:$/, (query, resultTable) => {
+    const searchResults = context.noteTypeRepository.find(named(query))
+
+    expect(searchResults.length).toEqual(resultTable.length)
+    for (const noteTypeRow of resultTable) {
+      const noteTypeName = noteTypeRow['Note Type']
+      const noteType = searchResults.find(x => x.name.value === noteTypeName)
+      expect(noteType).toBeDefined()
+      expect(noteType?.name.value).toEqual(noteTypeName)
+    }
+  })
 }
