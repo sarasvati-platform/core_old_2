@@ -1,5 +1,5 @@
 import { Entity, Identity } from '@src/core/models'
-import { Name, NoteField } from '@src/flashcards/models'
+import { Name, NoteField, CardType } from '@src/flashcards/models'
 import { NamedCollection } from '@src/core/utils/collections'
 
 export type NoteTypeId = Identity & {'type': 'NoteType'}
@@ -11,6 +11,7 @@ export class NoteTypeName extends Name {}
 export class NoteType extends Entity<NoteTypeId> {
   protected _name: NoteTypeName
   protected _fields = new NamedCollection<NoteField>()
+  protected _cardTypes = new NamedCollection<CardType>()
 
   /**
    * Creates a new instance of the NoteType class
@@ -46,5 +47,13 @@ export class NoteType extends Entity<NoteTypeId> {
    */
   get fields(): NamedCollection<NoteField> {
     return this._fields
+  }
+
+  /**
+   * Returns the card types of the note type
+   * @returns Card types of the note type
+   */
+  get cardTypes(): NamedCollection<CardType> {
+    return this._cardTypes
   }
 }
