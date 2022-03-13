@@ -57,7 +57,7 @@ class NoteFieldsCollection {
     return this._fields
   }
 
-  getByName(name: string): NoteField | undefined {
+  findByName(name: string): NoteField | undefined {
     return this._fields.find(x => x.name.value === name)
   }
 
@@ -79,58 +79,44 @@ class NoteFieldsCollection {
     }
   }
 
-  removeByName(name: string) {
-    const field = this.getByName(name)
-    if (field) {
-      this.remove(field)
-    } else {
-      throw new Error('Field does not belong to this instance')
-    }
-  }
-
   getPositionOf(field: NoteField) : number {
     return this._fields.indexOf(field)
   }
 
-  setPositionOf(field: NoteField) : FieldsPositionChanger {
-    return new FieldsPositionChanger(field, this._fields)
+  setPositionOf(field: NoteField) : ArrayItemPositionChanger<NoteField> {
+    return new ArrayItemPositionChanger(field, this._fields)
   }
 }
 
-class FieldsPositionChanger {
-  private _fields: NoteField[] = []
-  private _of: NoteField
+class ArrayItemPositionChanger<TItemType> {
+  private _array: TItemType[] = []
+  private _item: TItemType
 
-  constructor(of: NoteField, fields: NoteField[]) {
-    this._of = of
-    this._fields = fields
+  constructor(item: TItemType, array: TItemType[]) {
+    this._item = item
+    this._array = array
   }
 
   toTop() {
-    const fromIndex = this._fields.indexOf(this._of)
-    const toIndex = 0
-    this._fields.splice(fromIndex, 1)
-    this._fields.splice(toIndex, 0, this._of)
+    this.to(0)
   }
 
   toBottom() {
-    const fromIndex = this._fields.indexOf(this._of)
-    const toIndex = this._fields.length - 1
-    this._fields.splice(fromIndex, 1)
-    this._fields.splice(toIndex, 0, this._of)
+    this.to(this._array.length)
   }
 
-  after(field: NoteField) {
-    const fromIndex = this._fields.indexOf(this._of)
-    const toIndex = this._fields.indexOf(field)
-    this._fields.splice(fromIndex, 1)
-    this._fields.splice(toIndex, 0, this._of)
+  after(item: TItemType) {
+    this.to(this._array.indexOf(item) + 1)
   }
 
-  before(field: NoteField) {
-    const fromIndex = this._fields.indexOf(this._of)
-    const toIndex = this._fields.indexOf(field)
-    this._fields.splice(fromIndex, 1)
-    this._fields.splice(toIndex-1, 0, this._of)
+  before(item: TItemType) {
+    this.to(this._array.indexOf(item))
+  }
+
+  to(index: number) {
+    const fromIndex = this._array.indexOf(this._item)
+    const element = this._array[fromIndex]
+    this._array.splice(fromIndex, 1)
+    this._array.splice(index, 0, element)
   }
 }

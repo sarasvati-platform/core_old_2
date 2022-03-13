@@ -2,6 +2,33 @@ import { Identity } from '@src/core/models'
 import { NoteField, NoteFieldName, NoteType, NoteTypeId, NoteTypeName } from '@src/flashcards/models'
 
 describe('The NoteType instance', () => {
+  let sut: {
+    noteType: NoteType,
+    field1: NoteField,
+    field2: NoteField,
+    field3: NoteField,
+    field4: NoteField
+  }
+
+  beforeEach(() => {
+    sut = {
+      noteType: new NoteType(
+        new NoteTypeName('name'),
+        new Identity('note-type-id') as NoteTypeId
+      ),
+      field1: new NoteField(new NoteFieldName('field 1')),
+      field2: new NoteField(new NoteFieldName('field 2')),
+      field3: new NoteField(new NoteFieldName('field 3')),
+      field4: new NoteField(new NoteFieldName('field 4')),
+    }
+    sut.noteType.fields.add(sut.field1)
+    sut.noteType.fields.add(sut.field2)
+    sut.noteType.fields.add(sut.field3)
+  })
+
+  /* -------------------------------------------------------------------------- */
+  /*                               Initialization                               */
+  /* -------------------------------------------------------------------------- */
 
   describe('when initializing', () => {
     test('should generate different identities', () => {
@@ -11,153 +38,99 @@ describe('The NoteType instance', () => {
       expect(noteType1.identity.value).not.toEqual(noteType2.identity.value)
     })
 
-    test('should have a name', () => {
-      const noteType = new NoteType(new NoteTypeName('name'))
-      expect(noteType.name.value).toBe('name')
+    test('should return name by property', () => {
+      expect(sut.noteType.name.value).toBe('name')
     })
   })
 
-  describe('when initialized with a name', () => {
-    test('should return name by property', () => {
-      const nameValue = 'test'
-      const noteType = new NoteType(new NoteTypeName(nameValue))
-      expect(noteType.name.value).toBe(nameValue)
-    })
-  })
+  /* -------------------------------------------------------------------------- */
+  /*                              Rename note type                              */
+  /* -------------------------------------------------------------------------- */
 
   describe('when renaming', () => {
     test('should return new name by property', () => {
-      const nameValue = 'test'
-      const noteType = new NoteType(new NoteTypeName(nameValue))
-      const newNameValue = 'new name'
-      noteType.rename(new NoteTypeName(newNameValue))
-      expect(noteType.name.value).toBe(newNameValue)
+      sut.noteType.rename(new NoteTypeName('new name'))
+      expect(sut.noteType.name.value).toBe('new name')
     })
   })
 
-  describe('when comparing', () => {
-    test('should return true when compared to another instance with the same identity', () => {
-      const identity = new Identity() as NoteTypeId
-      const noteType1 = new NoteType(new NoteTypeName('name'), identity)
-      const noteType2 = new NoteType(new NoteTypeName('name'), identity)
-      expect(noteType1.equals(noteType2)).toBe(true)
-    })
-
-    test('should return false when compared to another instance with a different identity', () => {
-      const identity1 = new Identity() as NoteTypeId
-      const identity2 = new Identity() as NoteTypeId
-      const noteType1 = new NoteType(new NoteTypeName('name'), identity1)
-      const noteType2 = new NoteType(new NoteTypeName('name'), identity2)
-      expect(noteType1.equals(noteType2)).toBe(false)
-    })
-  })
+  /* -------------------------------------------------------------------------- */
+  /*                               Add fields                                   */
+  /* -------------------------------------------------------------------------- */
 
   describe('when adding a new field', () => {
-    test('should add field to the instance', () => {
-      const noteType = new NoteType(new NoteTypeName('name'))
-      const field = new NoteField(new NoteFieldName('field'))
+    test('should return fields by propert', () => {
+      expect(sut.noteType.fields.all).toEqual([sut.field1, sut.field2, sut.field3])
+    })
 
-      noteType.fields.add(field)
-      expect(noteType.fields.all).toEqual([field])
+    test('should add field to the instance', () => {
+      sut.noteType.fields.add(sut.field4)
+      expect(sut.noteType.fields.all).toContain(sut.field4)
     })
 
     test('should throw an error if the field name is already used', () => {
-      const noteType = new NoteType(new NoteTypeName('name'))
-      const field1 = new NoteField(new NoteFieldName('field1'))
-      const field2 = new NoteField(new NoteFieldName('field_same'))
-      const field3 = new NoteField(new NoteFieldName('field_same'))
-
-      noteType.fields.add(field1)
-      noteType.fields.add(field2)
-      expect(() => noteType.fields.add(field3)).toThrow('Field with name \'field_same\' already exists')
-      expect(noteType.fields.all.length).toEqual(2)
+      const fieldWithSameName = new NoteField(new NoteFieldName(sut.field1.name.value))
+      expect(() => sut.noteType.fields.add(fieldWithSameName)).toThrow('Field with name \'field 1\' already exists')
+      expect(sut.noteType.fields.all).toEqual([sut.field1, sut.field2, sut.field3])
     })
 
     test('should return a field by name', () => {
-      const noteType = new NoteType(new NoteTypeName('name'))
-      const field = new NoteField(new NoteFieldName('field'))
-      noteType.fields.add(field)
+      const found = sut.noteType.fields.findByName('field 1')
+      expect(found).toEqual(sut.field1)
+    })
 
-      expect(noteType.fields.getByName('field')).toEqual(field)
+    test('should return undefined if no field found', () => {
+      const found = sut.noteType.fields.findByName('field 999')
+      expect(found).toBeUndefined()
     })
   })
+
+  /* -------------------------------------------------------------------------- */
+  /*                                Remove fields                               */
+  /* -------------------------------------------------------------------------- */
 
   describe('when removing a field', () => {
     test('should remove field from the instance', () => {
-      const noteType = new NoteType(new NoteTypeName('name'))
-      const field1 = new NoteField(new NoteFieldName('field1'))
-      noteType.fields.add(field1)
-
-      noteType.fields.remove(field1)
-      expect(noteType.fields.all.length).toEqual(0)
+      sut.noteType.fields.remove(sut.field1)
+      sut.noteType.fields.remove(sut.field2)
+      sut.noteType.fields.remove(sut.field3)
+      expect(sut.noteType.fields.all).toEqual([])
     })
 
     test('should throw an exception if field does not belog to the instance', () => {
-      const noteType = new NoteType(new NoteTypeName('name'))
-      const field1 = new NoteField(new NoteFieldName('field1'))
-
-      expect(() => noteType.fields.remove(field1)).toThrow('Field does not belong to this instance')
+      const externalField = new NoteField(new NoteFieldName('field1'))
+      expect(() => sut.noteType.fields.remove(externalField)).toThrow('Field does not belong to this instance')
     })
   })
 
+  /* -------------------------------------------------------------------------- */
+  /*                             Position of a field                            */
+  /* -------------------------------------------------------------------------- */
+
   describe('when changing a position of field', () => {
     test('should return a position of field', () => {
-      const noteType = new NoteType(new NoteTypeName('name'))
-      const field1 = new NoteField(new NoteFieldName('field1'))
-      const field2 = new NoteField(new NoteFieldName('field2'))
-      noteType.fields.add(field1)
-      noteType.fields.add(field2)
-
-      expect(noteType.fields.getPositionOf(field1)).toEqual(0)
-      expect(noteType.fields.getPositionOf(field2)).toEqual(1)
+      expect(sut.noteType.fields.getPositionOf(sut.field1)).toEqual(0)
+      expect(sut.noteType.fields.getPositionOf(sut.field2)).toEqual(1)
     })
 
     test('should change a position to top', () => {
-      const noteType = new NoteType(new NoteTypeName('name'))
-      const field1 = new NoteField(new NoteFieldName('field1'))
-      const field2 = new NoteField(new NoteFieldName('field2'))
-      const field3 = new NoteField(new NoteFieldName('field3'))
-      noteType.fields.add(field1)
-      noteType.fields.add(field2)
-      noteType.fields.add(field3)
-
-      noteType.fields.setPositionOf(field3).toTop()
-      expect(noteType.fields.all).toEqual([field3, field1, field2])
+      sut.noteType.fields.setPositionOf(sut.field3).toTop()
+      expect(sut.noteType.fields.all).toEqual([sut.field3, sut.field1, sut.field2])
     })
 
     test('should change a position to bottom', () => {
-      const noteType = new NoteType(new NoteTypeName('name'))
-      const field1 = new NoteField(new NoteFieldName('field1'))
-      const field2 = new NoteField(new NoteFieldName('field2'))
-      const field3 = new NoteField(new NoteFieldName('field3'))
-      noteType.fields.add(field1)
-      noteType.fields.add(field2)
-      noteType.fields.add(field3)
-
-      noteType.fields.setPositionOf(field1).toBottom()
-      expect(noteType.fields.all).toEqual([field2, field3, field1])
+      sut.noteType.fields.setPositionOf(sut.field1).toBottom()
+      expect(sut.noteType.fields.all).toEqual([sut.field2, sut.field3, sut.field1])
     })
 
     test('should change a position before field', () => {
-      const noteType = new NoteType(new NoteTypeName('name'))
-      const field1 = new NoteField(new NoteFieldName('field1'))
-      const field2 = new NoteField(new NoteFieldName('field2'))
-      noteType.fields.add(field1)
-      noteType.fields.add(field2)
-
-      noteType.fields.setPositionOf(field2).before(field1)
-      expect(noteType.fields.all).toEqual([field2, field1])
+      sut.noteType.fields.setPositionOf(sut.field3).before(sut.field2)
+      expect(sut.noteType.fields.all).toEqual([sut.field1, sut.field3, sut.field2])
     })
 
     test('should change a position after field', () => {
-      const noteType = new NoteType(new NoteTypeName('name'))
-      const field1 = new NoteField(new NoteFieldName('field1'))
-      const field2 = new NoteField(new NoteFieldName('field2'))
-      noteType.fields.add(field1)
-      noteType.fields.add(field2)
-
-      noteType.fields.setPositionOf(field1).after(field2)
-      expect(noteType.fields.all).toEqual([field2, field1])
+      sut.noteType.fields.setPositionOf(sut.field1).after(sut.field3)
+      expect(sut.noteType.fields.all).toEqual([sut.field2, sut.field3, sut.field1])
     })
   })
 

@@ -42,7 +42,9 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
 
   when(/^User removes '(.*)' field from '(.*)' note type$/, (fieldName: string, noteTypeName: string) => {
     const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
-    noteType.fields.removeByName(fieldName)
+    const field = noteType.fields.findByName(fieldName)
+    if (!field) { throw new Error(`Field '${fieldName}' not found`) }
+    noteType.fields.remove(field)
   })
 
   /* -------------------------------------------------------------------------- */
@@ -66,13 +68,13 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
 
   then(/^Note type '(.*)' has '(.*)' field$/, (noteTypeName, fieldName) => {
     const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
-    const field = noteType.fields.getByName(fieldName)
+    const field = noteType.fields.findByName(fieldName)
     expect(field).toBeDefined()
   })
 
   then(/^Note type '(.*)' has no '(.*)' field$/, (noteTypeName, fieldName) => {
     const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
-    const field = noteType.fields.getByName(fieldName)
+    const field = noteType.fields.findByName(fieldName)
     expect(field).toBeUndefined()
   })
 
