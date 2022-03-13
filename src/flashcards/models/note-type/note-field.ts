@@ -1,6 +1,5 @@
 import { Name } from '@src/flashcards/models'
 
-
 /**
  * A name for a note field
  */
@@ -16,7 +15,6 @@ export class NoteFieldName extends Name {
     super(name)
   }
 }
-
 
 /**
  * The NoteField class represents a field of a note type
