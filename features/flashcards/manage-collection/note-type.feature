@@ -78,3 +78,18 @@ Feature: Flashcards / Manage Collection / Note Type
       And User adds 'Word' field to 'Foreign Word' note type
       And User removes 'Word' field from 'Foreign Word' note type
       Then Note type 'Foreign Word' has no 'Word' field
+
+    # -------------------------------------------------------------------------- #
+    #                                Card Types                                  #
+    # -------------------------------------------------------------------------- #
+
+    Scenario: User can add card type to the note type
+      When User creates 'Foreign Word' note type
+      And User adds 'Front -> Back' card type to 'Foreign Word' note type
+      Then Note type 'Foreign Word' has 'Front -> Back' card type
+
+    Scenario: User can delete card type from the note type
+      When User creates 'Foreign Word' note type
+      And User adds 'Front -> Back' card type to 'Foreign Word' note type
+      And User removes 'Front -> Back' card type from 'Foreign Word' note type
+      Then Note type 'Foreign Word' has no 'Front -> Back' card type

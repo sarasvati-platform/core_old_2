@@ -1,6 +1,6 @@
 import { StepDefinitions } from 'jest-cucumber'
 import { Identity } from '@src/core/models'
-import { NoteType, NoteTypeId, NoteTypeName, NoteField, NoteFieldName } from '@src/flashcards/models'
+import { NoteType, NoteTypeId, NoteTypeName, NoteField, NoteFieldName, CardTypeName, CardType } from '@src/flashcards/models'
 import { context } from '@tests/features/flashcards/context'
 import { named } from '@src/flashcards/models/note-type/queries'
 import { Expression } from '@sarasvati-platform/abstract-query'
@@ -47,6 +47,18 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
     noteType.fields.remove(field)
   })
 
+  when(/^User adds '(.*)' card type to '(.*)' note type$/, (cardTypeName: string, noteTypeName) => {
+    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
+    noteType.cardTypes.add(new CardType(new CardTypeName(cardTypeName)))
+  })
+
+  when(/^User removes '(.*)' card type from '(.*)' note type$/, (cardTypeName: string, noteTypeName: string) => {
+    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
+    const cardType = noteType.cardTypes.findByName(cardTypeName)
+    if (!cardType) { throw new Error(`Card type '${cardTypeName}' not found`) }
+    noteType.cardTypes.remove(cardType)
+  })
+
   /* -------------------------------------------------------------------------- */
   /*                                    Then                                    */
   /* -------------------------------------------------------------------------- */
@@ -75,6 +87,18 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
   then(/^Note type '(.*)' has no '(.*)' field$/, (noteTypeName, fieldName) => {
     const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
     const field = noteType.fields.findByName(fieldName)
+    expect(field).toBeUndefined()
+  })
+
+  then(/^Note type '(.*)' has '(.*)' card type$/, (noteTypeName, cardTypeName) => {
+    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
+    const field = noteType.cardTypes.findByName(cardTypeName)
+    expect(field).toBeDefined()
+  })
+
+  then(/^Note type '(.*)' has no '(.*)' card type$/, (noteTypeName, cardTypeName) => {
+    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
+    const field = noteType.cardTypes.findByName(cardTypeName)
     expect(field).toBeUndefined()
   })
 
