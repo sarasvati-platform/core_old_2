@@ -1,10 +1,11 @@
-import { Name } from '@src/flashcards/models'
+import { Name, CardSection } from '@src/flashcards/models'
 
 /** Note type name */
 export class CardTypeName extends Name {}
 
 /** Note type */
 export class CardType {
+  private _sections: CardSection[] = []
   protected _name: CardTypeName
 
   /**
@@ -22,6 +23,30 @@ export class CardType {
    */
   get name(): CardTypeName {
     return this._name
+  }
+
+  /**
+   * Returns first section that can be used as a question
+   * @returns First section
+   */
+  get frontSection(): CardSection {
+    return this._sections[0]
+  }
+
+  /**
+   * Returns sections that can be used as an answer
+   * @returns List of the sections except first one
+   */
+  get backSections(): CardSection[] {
+    return this._sections.slice(1)
+  }
+
+  /**
+   * Returns list of the sections
+   * @returns List of the sections
+   */
+  get sections(): CardSection[] {
+    return this._sections
   }
 
   /**
