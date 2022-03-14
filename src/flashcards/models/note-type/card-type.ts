@@ -14,8 +14,10 @@ export class CardType {
    */
   constructor(
     name: CardTypeName,
+    sections: CardSection[] = [],
   ) {
     this._name = name
+    sections.forEach(x => this._sections.add(x))
   }
 
   /**
@@ -64,5 +66,9 @@ class CardSectionsCollection {
 
   public add(section: CardSection) {
     this._sections.push(section)
+  }
+
+  get all(): readonly CardSection[] {
+    return this._sections
   }
 }
