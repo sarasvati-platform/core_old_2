@@ -21,18 +21,18 @@ describe('The CardType instance', () => {
 
   describe('sections', () => {
     test('returns and empty array', () => {
-      expect(sut.sections).toStrictEqual([])
+      expect(sut.sections.front).toStrictEqual(undefined)
     })
 
     test('returns and array of section', () => {
       const section = new CardSection('template')
-      sut.sections.push(section)
+      sut.sections.add(section)
 
-      expect(sut.sections).toStrictEqual([section])
+      expect(sut.sections.front).toStrictEqual(section)
     })
 
     test('frontSection returns undefined array if there is no sections', () => {
-      expect(sut.frontSection).toStrictEqual(undefined)
+      expect(sut.sections.front).toStrictEqual(undefined)
     })
 
     test('frontSection returns only first section', () => {
@@ -40,19 +40,19 @@ describe('The CardType instance', () => {
         new CardSection('front'),
         new CardSection('back')
       ]
-      sut.sections.push(sections[0])
-      sut.sections.push(sections[1])
+      sut.sections.add(sections[0])
+      sut.sections.add(sections[1])
 
-      expect(sut.frontSection).toStrictEqual(sections[0])
+      expect(sut.sections.front).toStrictEqual(sections[0])
     })
 
     test('backSections returns empty array if there is no sections', () => {
-      expect(sut.backSections).toStrictEqual([])
+      expect(sut.sections.back).toStrictEqual([])
     })
 
     test('backSections returns empty array if there is only one section', () => {
-      sut.sections.push(new CardSection('front'))
-      expect(sut.backSections).toStrictEqual([])
+      sut.sections.add(new CardSection('front'))
+      expect(sut.sections.back).toStrictEqual([])
     })
 
     test('backSections returns sections except the first one', () => {
@@ -61,20 +61,20 @@ describe('The CardType instance', () => {
         new CardSection('back'),
         new CardSection('additional')
       ]
-      sut.sections.push(sections[0])
-      sut.sections.push(sections[1])
-      sut.sections.push(sections[2])
+      sut.sections.add(sections[0])
+      sut.sections.add(sections[1])
+      sut.sections.add(sections[2])
 
-      expect(sut.backSections).toStrictEqual([sections[1], sections[2]])
+      expect(sut.sections.back).toStrictEqual([sections[1], sections[2]])
     })
 
     test('backSections returns empty array if there is only one section', () => {
-      sut.sections.push(new CardSection('front'))
-      expect(sut.backSections).toStrictEqual([])
+      sut.sections.add(new CardSection('front'))
+      expect(sut.sections.back).toStrictEqual([])
     })
 
     test('backSections returns empty array if there is no sections', () => {
-      expect(sut.backSections).toStrictEqual([])
+      expect(sut.sections.back).toStrictEqual([])
     })
   })
 })

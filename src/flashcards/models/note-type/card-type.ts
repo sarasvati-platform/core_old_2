@@ -5,7 +5,7 @@ export class CardTypeName extends Name {}
 
 /** Note type */
 export class CardType {
-  private _sections: CardSection[] = []
+  private _sections = new CardSectionsCollection()
   protected _name: CardTypeName
 
   /**
@@ -26,26 +26,10 @@ export class CardType {
   }
 
   /**
-   * Returns first section that can be used as a question
-   * @returns First section
-   */
-  get frontSection(): CardSection {
-    return this._sections[0]
-  }
-
-  /**
-   * Returns sections that can be used as an answer
-   * @returns List of the sections except first one
-   */
-  get backSections(): CardSection[] {
-    return this._sections.slice(1)
-  }
-
-  /**
    * Returns list of the sections
    * @returns List of the sections
    */
-  get sections(): CardSection[] {
+  get sections(): CardSectionsCollection {
     return this._sections
   }
 
@@ -55,5 +39,30 @@ export class CardType {
    */
   rename(name: CardTypeName) {
     this._name = name
+  }
+}
+
+
+class CardSectionsCollection {
+  private _sections: CardSection[] = []
+
+  /**
+   * Returns first section that can be used as a question
+   * @returns First section
+   */
+  get front(): CardSection | undefined {
+    return this._sections[0]
+  }
+
+  /**
+   * Returns sections that can be used as an answer
+   * @returns List of the sections except first one
+   */
+  get back(): CardSection[] {
+    return this._sections.slice(1)
+  }
+
+  public add(section: CardSection) {
+    this._sections.push(section)
   }
 }
