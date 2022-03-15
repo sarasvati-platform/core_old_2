@@ -1,7 +1,7 @@
 import { Card, RenderedCard } from '@src/flashcards/models'
 
 export class CardRenderer {
-  render(card: Card) {
+  render(card: Card) : RenderedCard {
     const renderedSections: string[] = []
     for (const section of card.type.sections.all) {
       let template = section.template

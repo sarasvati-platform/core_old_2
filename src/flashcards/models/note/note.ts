@@ -1,8 +1,12 @@
 import { Identity, Entity } from '@src/core/models'
 import { NoteType } from '@src/flashcards/models'
 
+/** Identity for [note]{@link Note} */
 export type NoteId = Identity & {'type': 'Note'}
 
+/**
+ * Contains the information you want to study.
+ */
 export class Note extends Entity<NoteId> {
   private fieldValues = {}
 
@@ -42,8 +46,6 @@ export class Note extends Entity<NoteId> {
 
   private throwIfNoFieldFound(fieldName: string) {
     const field = this.type.fields.findByName(fieldName)
-    if (!field) {
-      throw new Error('No field found')
-    }
+    if (!field) { throw new Error('No field found') }
   }
 }

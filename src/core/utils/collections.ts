@@ -37,40 +37,43 @@ export interface IHasName {
   get name(): { value: string }
 }
 
+/**
+ * A collection of items with a name.
+ */
 export class NamedCollection<TItem extends IHasName> {
-  private _fields: TItem[] = []
+  private _items: TItem[] = []
 
   get all(): readonly TItem[] {
-    return this._fields
+    return this._items
   }
 
   findByName(name: string): TItem | undefined {
-    return this._fields.find(x => x.name.value === name)
+    return this._items.find(x => x.name.value === name)
   }
 
   add(field: TItem) {
     Validate.shouldNotContain(
       field.name.value.toLocaleLowerCase(),
-      this._fields.map(x => x.name.value.toLocaleLowerCase()),
+      this._items.map(x => x.name.value.toLocaleLowerCase()),
       `Field with name '${field.name.value}' already exists`
     )
-    this._fields.push(field)
+    this._items.push(field)
   }
 
   remove(field: TItem) {
-    const index = this._fields.indexOf(field)
+    const index = this._items.indexOf(field)
     if (index !== -1) {
-      this._fields.splice(index, 1)
+      this._items.splice(index, 1)
     } else {
       throw new Error('Field does not belong to this instance')
     }
   }
 
   getPositionOf(field: TItem) : number {
-    return this._fields.indexOf(field)
+    return this._items.indexOf(field)
   }
 
   setPositionOf(field: TItem) : CollectionItemMover<TItem> {
-    return new CollectionItemMover(field, this._fields)
+    return new CollectionItemMover(field, this._items)
   }
 }

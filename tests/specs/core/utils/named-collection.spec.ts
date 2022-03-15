@@ -12,7 +12,7 @@ class NamedItem implements IHasName {
   }
 }
 
-describe('The collection instance', () => {
+describe('The NamedCollection instance', () => {
   let sut: {
     collection: NamedCollection<NamedItem>,
     item1: NamedItem,
