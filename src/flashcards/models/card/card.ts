@@ -20,7 +20,7 @@ export class Card extends Entity<CardId> {
   constructor(
     public readonly type: CardType,
     public readonly note: Note,
-    public readonly schedule: ReviewSchedule,
+    // public readonly schedule: ReviewSchedule,
     identity: CardId = new Identity() as CardId,
   ) {
     super(identity)

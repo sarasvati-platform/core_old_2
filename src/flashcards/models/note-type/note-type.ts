@@ -1,12 +1,34 @@
 import { Entity, Identity } from '@src/core/models'
 import { Name, NoteField, CardType } from '@src/flashcards/models'
-import { NamedCollection } from '@src/core/utils/collections'
+import { OrderedMap, KeyComparers } from '@src/core/utils/collections'
 
 /** Identity for [note type]{@link NoteType} */
 export type NoteTypeId = Identity & {'type': 'NoteType'}
 
 /** Note type name */
 export class NoteTypeName extends Name {}
+
+interface IHasName { get name(): Name }
+
+class NamedCollection<TItem extends IHasName> {
+  private items: OrderedMap<string, TItem> = new OrderedMap<string, TItem>(KeyComparers.LocaleCaseInsensitive)
+
+  public get all(): readonly TItem[] {
+    return this.items.values
+  }
+
+  public add(item: TItem) {
+    this.items.add(item.name.value, item)
+  }
+
+  public remove(item: TItem) {
+    this.items.remove(item.name.value)
+  }
+
+  public findByName(name: string): TItem | undefined {
+    return this.items.find(name)
+  }
+}
 
 /**
  * Each type of note has its own set of [fields]{@link NoteField} and

@@ -55,11 +55,11 @@ Feature: Flashcards / Manage Collection / Note Type
 
     Scenario: User cannot add a field with the same name
       And User adds 'Word' field to 'Foreign Word' note type
-      Then User sees an error "Field with name 'Word' already exists"
+      Then User sees an error "Item with name 'Word' already exists"
 
     Scenario: User cannot add a field with the same name in a different case
       When User adds 'WORD' field to 'Foreign Word' note type
-      Then User sees an error "Field with name 'WORD' already exists"
+      Then User sees an error "Item with name 'WORD' already exists"
 
     Scenario Outline: User cannot add field with special characters
       When User adds '<Field>' field to 'Foreign Word' note type

@@ -34,7 +34,8 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
     const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
     try {
       fieldName = fieldName.replace('<newline>', '\n').replace('<tab>', '\t')
-      noteType.fields.add(new NoteField(new NoteFieldName(fieldName)))
+      const name = new NoteFieldName(fieldName)
+      noteType.fields.add(new NoteField(name))
     } catch (e) {
       context.addError(e)
     }
@@ -49,7 +50,8 @@ export const nodeTypesManageSteps: StepDefinitions = ({ when, then }) => {
 
   when(/^User adds '(.*)' card type to '(.*)' note type$/, (cardTypeName: string, noteTypeName) => {
     const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
-    noteType.cardTypes.add(new CardType(new CardTypeName(cardTypeName)))
+    const name = new CardTypeName(cardTypeName)
+    noteType.cardTypes.add(new CardType(name))
   })
 
   when(/^User removes '(.*)' card type from '(.*)' note type$/, (cardTypeName: string, noteTypeName: string) => {
