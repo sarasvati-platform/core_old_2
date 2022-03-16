@@ -7,7 +7,7 @@ describe('NoteField', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('constructor', () => {
-    test('uses parameters', () => {
+    it('uses parameters', () => {
       const name = new NoteFieldName('name')
       const field = new NoteField(name)
 

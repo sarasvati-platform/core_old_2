@@ -19,12 +19,12 @@ describe('CardsGenerator', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.generate()', () => {
-    test('returns an empty array in no card types were added', () => {
+    it('returns an empty array in no card types were added', () => {
       const result = sut.generator.generate()
       expect(result).toStrictEqual([])
     })
 
-    test('returns an array of cards', () => {
+    it('returns an array of cards', () => {
       sut.note.type.fields.add(new NoteField(new NoteFieldName('country')))
       sut.note.type.fields.add(new NoteField(new NoteFieldName('capital')))
 

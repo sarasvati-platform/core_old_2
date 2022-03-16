@@ -46,7 +46,7 @@ describe('NamedCollection', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.add()', () => {
-    test('adds field', () => {
+    it('adds field', () => {
       sut.collection.add(sut.field4)
       expect(sut.collection.all).toEqual([sut.field1, sut.field2, sut.field3, sut.field4])
     })
@@ -57,7 +57,7 @@ describe('NamedCollection', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.remove()', () => {
-    test('removes field', () => {
+    it('removes field', () => {
       sut.collection.remove(sut.field2)
       expect(sut.collection.all).toEqual([sut.field1, sut.field3])
     })
@@ -68,11 +68,11 @@ describe('NamedCollection', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.findByName()', () => {
-    test('finds field by name', () => {
+    it('finds field by name', () => {
       expect(sut.collection.findByName(sut.field2.name.value)).toBe(sut.field2)
     })
 
-    test('returns undefined if field is not found', () => {
+    it('returns undefined if field is not found', () => {
       expect(sut.collection.findByName('not-found')).toBeUndefined()
     })
   })

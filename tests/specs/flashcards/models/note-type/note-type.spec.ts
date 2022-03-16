@@ -31,7 +31,7 @@ describe('NoteType', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('constructor', () => {
-    test('uses parameters', () => {
+    it('uses parameters', () => {
       expect(sut.noteType.name.value).toBe('name')
     })
   })
@@ -41,7 +41,7 @@ describe('NoteType', () => {
   /* -------------------------------------------------------------------------- */
 
   describe('.rename()', () => {
-    test('renames note type', () => {
+    it('renames note type', () => {
       sut.noteType.rename(new NoteTypeName('new name'))
       expect(sut.noteType.name.value).toBe('new name')
     })
