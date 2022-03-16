@@ -64,10 +64,18 @@ class CardSectionsCollection {
     return this._sections.slice(1)
   }
 
+  /**
+   * Adds a new section to the collection
+   * @param section Section to add
+   */
   public add(section: CardSection) {
     this._sections.push(section)
   }
 
+  /**
+   * Returns all sections
+   * @returns List of the sections
+   */
   get all(): readonly CardSection[] {
     return this._sections
   }

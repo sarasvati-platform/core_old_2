@@ -1,80 +1,102 @@
 import { CardType, CardSection, CardTypeName } from '@src/flashcards/models'
 
-describe('The CardType instance', () => {
+describe('CardType', () => {
   let sut: CardType
 
   beforeEach(() => {
     sut = new CardType(new CardTypeName('card type'))
   })
 
-  test('name returns name of the card', () => {
-    expect(sut.name.value).toStrictEqual('card type')
+  /* -------------------------------------------------------------------------- */
+  /*                                    name                                    */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.name', () => {
+    it('returns name of the card', () => {
+      expect(sut.name.value).toStrictEqual('card type')
+    })
   })
 
-  describe('when renaming', () => {
-    test('name is updated', () => {
+  /* -------------------------------------------------------------------------- */
+  /*                                   rename                                   */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.rename()', () => {
+    it('name is updated', () => {
       sut.rename(new CardTypeName('new name'))
       expect(sut.name.value).toStrictEqual('new name')
     })
   })
 
+  /* -------------------------------------------------------------------------- */
+  /*                                  sections                                  */
+  /* -------------------------------------------------------------------------- */
 
-  describe('sections', () => {
-    test('returns and empty array', () => {
-      expect(sut.sections.front).toStrictEqual(undefined)
+  describe('.sections', () => {
+
+    /* ------------------------------------------------------------------------ */
+    /*                                    all                                   */
+    /* ------------------------------------------------------------------------ */
+
+    describe('.all', () => {
+      it('returns empty array if there s no sections', () => {
+        expect(sut.sections.all).toStrictEqual([])
+      })
+
+      it('returns all sections', () => {
+        const section = new CardSection('front')
+        sut.sections.add(section)
+        expect(sut.sections.all).toStrictEqual([section])
+      })
     })
 
-    test('returns and array of section', () => {
-      const section = new CardSection('template')
-      sut.sections.add(section)
+    /* ------------------------------------------------------------------------ */
+    /*                                   front                                  */
+    /* ------------------------------------------------------------------------ */
 
-      expect(sut.sections.front).toStrictEqual(section)
+    describe('.front', () => {
+      it('returns undefined if there is no sections', () => {
+        expect(sut.sections.front).toStrictEqual(undefined)
+      })
+
+      it('returns only first section', () => {
+        const sections = [
+          new CardSection('front'),
+          new CardSection('back')
+        ]
+        sut.sections.add(sections[0])
+        sut.sections.add(sections[1])
+
+        expect(sut.sections.front).toStrictEqual(sections[0])
+      })
     })
 
-    test('frontSection returns undefined array if there is no sections', () => {
-      expect(sut.sections.front).toStrictEqual(undefined)
-    })
+    /* ------------------------------------------------------------------------ */
+    /*                                   back                                   */
+    /* ------------------------------------------------------------------------ */
 
-    test('frontSection returns only first section', () => {
-      const sections = [
-        new CardSection('front'),
-        new CardSection('back')
-      ]
-      sut.sections.add(sections[0])
-      sut.sections.add(sections[1])
+    describe('.back', () => {
+      it('returns empty array if there is no sections', () => {
+        expect(sut.sections.back).toStrictEqual([])
+      })
 
-      expect(sut.sections.front).toStrictEqual(sections[0])
-    })
+      it('returns empty array if there is only one section', () => {
+        sut.sections.add(new CardSection('front'))
+        expect(sut.sections.back).toStrictEqual([])
+      })
 
-    test('backSections returns empty array if there is no sections', () => {
-      expect(sut.sections.back).toStrictEqual([])
-    })
+      it('returns sections except the first one', () => {
+        const sections = [
+          new CardSection('front'),
+          new CardSection('back'),
+          new CardSection('additional')
+        ]
+        sut.sections.add(sections[0])
+        sut.sections.add(sections[1])
+        sut.sections.add(sections[2])
 
-    test('backSections returns empty array if there is only one section', () => {
-      sut.sections.add(new CardSection('front'))
-      expect(sut.sections.back).toStrictEqual([])
-    })
-
-    test('backSections returns sections except the first one', () => {
-      const sections = [
-        new CardSection('front'),
-        new CardSection('back'),
-        new CardSection('additional')
-      ]
-      sut.sections.add(sections[0])
-      sut.sections.add(sections[1])
-      sut.sections.add(sections[2])
-
-      expect(sut.sections.back).toStrictEqual([sections[1], sections[2]])
-    })
-
-    test('backSections returns empty array if there is only one section', () => {
-      sut.sections.add(new CardSection('front'))
-      expect(sut.sections.back).toStrictEqual([])
-    })
-
-    test('backSections returns empty array if there is no sections', () => {
-      expect(sut.sections.back).toStrictEqual([])
+        expect(sut.sections.back).toStrictEqual([sections[1], sections[2]])
+      })
     })
   })
 })
