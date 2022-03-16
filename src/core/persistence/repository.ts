@@ -1,11 +1,42 @@
-import { IEntity, Identity } from '@src/core/models'
-import { IExpression } from '@sarasvati-platform/abstract-query'
+import { Identity, Entity } from '@src/core/models'
+import { Expression, Operator } from '@sarasvati-platform/abstract-query'
 
-export type IQuery = IExpression
+export type IQuery = Expression | Operator
 
-export interface IRepository<TEntity extends IEntity> {
+/**
+ * Interface for a repository.
+ */
+export interface IRepository<
+  TIdentity extends Identity,
+  TEntity extends Entity<TIdentity>
+> {
+  /**
+   * Save entity.
+   * @param entity Entity to save.
+   */
   save(entity: TEntity): void
-  get(identity: Identity): TEntity | undefined
+
+  /**
+   * Get entity by identity.
+   * @param identity Identity of the entity to load.
+   */
+  get(identity: TIdentity): TEntity
+
+  /**
+   * Check if entity exists.
+   * @param identity Identity of the entity to check.
+   */
+  exists(identity: TIdentity): boolean
+
+  /**
+   * Find entities by query.
+   * @param query Query to find entities by.
+   */
   find(query: IQuery): readonly TEntity[]
-  delete(identity: Identity): void
+
+  /**
+   * Delete entity by identity.
+   * @param identity Identity of the entity to remove.
+   */
+  delete(identity: TIdentity): void
 }
