@@ -11,6 +11,7 @@ export class Identity {
    * @param id Value. Will be generated if nothing is provided
    */
   constructor(id?: string) {
+    if (id && !id.trim()) { throw new Error('Identity cannot be empty string') }
     this._id = id || uuid_v4()
   }
 

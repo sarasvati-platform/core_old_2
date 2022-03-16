@@ -45,11 +45,6 @@ export class OrderedMap<TKey, TItem> {
     if (this.find(key)) {
       throw new Error(`Item with name '${key}' already exists`)
     }
-
-    const index = this.getPositionOf(key)
-    if (index >= 0) {
-      throw new Error('Item already exists')
-    }
     this._items.push([key, item])
   }
 

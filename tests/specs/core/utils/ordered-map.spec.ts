@@ -114,13 +114,13 @@ describe('OrderedMap', () => {
       expect(sut.collection.values).toEqual(expected)
     })
 
-    test('.before(item)', () => {
+    test('.before()', () => {
       const expected = [sut.items[0], sut.items[2], sut.items[1]]
       sut.collection.setPositionOf('item2').before(sut.items[1].name)
       expect(sut.collection.values).toEqual(expected)
     })
 
-    test('.after(item)', () => {
+    test('.after()', () => {
       const expected = [sut.items[1], sut.items[2], sut.items[0]]
       sut.collection.setPositionOf('item0').after(sut.items[2].name)
       expect(sut.collection.values).toEqual(expected)
