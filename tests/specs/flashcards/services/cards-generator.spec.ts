@@ -2,7 +2,7 @@ import { Note, NoteType, CardType, CardTypeName, NoteTypeName, NoteField, NoteFi
 import { CardsGenerator } from '@src/flashcards/services/cards-generator'
 import { CardRenderer } from '@src/flashcards/services/card-renderer'
 
-describe('The CardsGenerator instance', () => {
+describe('CardsGenerator', () => {
   let sut: { note: Note, generator: CardsGenerator, renderer: CardRenderer }
 
   beforeEach(() => {
@@ -14,7 +14,11 @@ describe('The CardsGenerator instance', () => {
     }
   })
 
-  describe('when generating', () => {
+  /* -------------------------------------------------------------------------- */
+  /*                                  generate                                  */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.generate()', () => {
     test('returns an empty array in no card types were added', () => {
       const result = sut.generator.generate()
       expect(result).toStrictEqual([])
