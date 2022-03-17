@@ -1,5 +1,5 @@
 import { INoteTypeRepository } from '@src/flashcards/ports/repositories'
-import { FakeNoteTypeRepository } from './ports/repositories/fake-note-type-repository'
+import { FakeNoteTypeRepository } from '@tests/ports/repositories/fake-note-type-repository'
 
 class Context {
   addError(error: Error) {

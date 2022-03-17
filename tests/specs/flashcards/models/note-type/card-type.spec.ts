@@ -28,6 +28,23 @@ describe('CardType', () => {
     })
   })
 
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   equals                                   */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.equals()', () => {
+    it('returns true if names are equal', () => {
+      const other = new CardType(new CardTypeName(sut.name.value))
+      expect(sut.equals(other)).toBeTruthy()
+    })
+
+    it('returns false if names are not equal', () => {
+      const other = new CardType(new CardTypeName('other name'))
+      expect(sut.equals(other)).toBeFalsy()
+    })
+  })
+
   /* -------------------------------------------------------------------------- */
   /*                                  sections                                  */
   /* -------------------------------------------------------------------------- */

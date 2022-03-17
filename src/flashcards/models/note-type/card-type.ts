@@ -42,6 +42,15 @@ export class CardType {
   rename(name: CardTypeName) {
     this._name = name
   }
+
+  /**
+   * Compares the CardType to another CardType.
+   * @param other Other card type.
+   * @returns True if the card types are equal.
+   */
+  equals(other: CardType) {
+    return this.name.equals(other.name)
+  }
 }
 
 
