@@ -9,8 +9,9 @@ export class CardType {
   protected _name: CardTypeName
 
   /**
-   * Creates a new instance of the CardType class
-   * @param name Name of the note type
+   * Creates a new instance of the CardType class.
+   * @param name Name of the note type.
+   * @param sections List of the sections.
    */
   constructor(
     name: CardTypeName,
