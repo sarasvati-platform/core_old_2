@@ -1,8 +1,8 @@
 import { IRepository } from '@src/core/persistence'
 import { Entity, Identity } from '@src/core/models'
-import { NoteType, NoteTypeId } from '@src/flashcards/models'
+import { Card, CardId, NoteType, NoteTypeId } from '@src/flashcards/models'
 import { Expression, Operator } from '@sarasvati-platform/abstract-query'
-
+import { CardFields } from '@src/flashcards/models/card/queries'
 
 export abstract class FakeRepository<
   TIdentity extends Identity,
@@ -68,5 +68,12 @@ export class FakeNoteTypeRepository extends FakeRepository<NoteTypeId, NoteType>
   getFieldValue(f: string, o: NoteType) {
     if (f === 'name') { return o.name.value }
     if (f === 'id') { return o.identity.value }
+  }
+}
+
+export class FakeCardsRepository extends FakeRepository<CardId, Card> {
+  getFieldValue(f: string, o: Card) {
+    if (f === CardFields.NoteId) { return o.note.identity.value }
+    // if (f === 'type.name') { return o.type.name.value }
   }
 }

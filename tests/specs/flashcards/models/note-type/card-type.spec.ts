@@ -8,6 +8,28 @@ describe('CardType', () => {
   })
 
   /* -------------------------------------------------------------------------- */
+  /*                                 constructor                                */
+  /* -------------------------------------------------------------------------- */
+
+  describe('constructor', () => {
+    it('creates a new instance', () => {
+      const name = new CardTypeName('card type')
+      const cardType = new CardType(name)
+      expect(cardType.name).toEqual(name)
+      expect(cardType.sections.all.length).toEqual(0)
+      expect(cardType.sections.all).toEqual([])
+    })
+
+    it('creates a new instance with sections', () => {
+      const sections = [new CardSection('section 1'), new CardSection('section 2')]
+      sut = new CardType(new CardTypeName('card type'), sections)
+      expect(sut.sections.all.length).toBe(2)
+      expect(sut.sections.all).toEqual(sections)
+    })
+  })
+
+
+  /* -------------------------------------------------------------------------- */
   /*                                    name                                    */
   /* -------------------------------------------------------------------------- */
 
@@ -25,6 +47,23 @@ describe('CardType', () => {
     it('name is updated', () => {
       sut.rename(new CardTypeName('new name'))
       expect(sut.name.value).toStrictEqual('new name')
+    })
+  })
+
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   equals                                   */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.equals()', () => {
+    it('returns true if names are equal', () => {
+      const other = new CardType(new CardTypeName(sut.name.value))
+      expect(sut.equals(other)).toBeTruthy()
+    })
+
+    it('returns false if names are not equal', () => {
+      const other = new CardType(new CardTypeName('other name'))
+      expect(sut.equals(other)).toBeFalsy()
     })
   })
 

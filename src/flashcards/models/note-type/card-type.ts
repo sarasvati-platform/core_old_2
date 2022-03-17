@@ -9,8 +9,9 @@ export class CardType {
   protected _name: CardTypeName
 
   /**
-   * Creates a new instance of the CardType class
-   * @param name Name of the note type
+   * Creates a new instance of the CardType class.
+   * @param name Name of the note type.
+   * @param sections List of the sections.
    */
   constructor(
     name: CardTypeName,
@@ -41,6 +42,15 @@ export class CardType {
    */
   rename(name: CardTypeName) {
     this._name = name
+  }
+
+  /**
+   * Compares the CardType to another CardType.
+   * @param other Other card type.
+   * @returns True if the card types are equal.
+   */
+  equals(other: CardType) {
+    return this.name.equals(other.name)
   }
 }
 
