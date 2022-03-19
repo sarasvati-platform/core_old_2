@@ -15,4 +15,16 @@ describe('NoteField', () => {
     })
   })
 
+  /* -------------------------------------------------------------------------- */
+  /*                                   rename                                   */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.rename()', () => {
+    it('renames field', () => {
+      const name = new NoteFieldName('name')
+      const field = new NoteField(name)
+      field.rename(new NoteFieldName('new name'))
+      expect(field.name.value).toBe('new name')
+    })
+  })
 })
