@@ -43,7 +43,7 @@ export class OrderedMap<TKey, TItem> {
    */
   add(key: TKey, item: TItem) : void {
     if (this.find(key)) {
-      throw new Error(`Item with name '${key}' already exists`)
+      throw new Error(`Item '${key}' already exists`)
     }
     this._items.push([key, item])
   }
@@ -57,7 +57,7 @@ export class OrderedMap<TKey, TItem> {
     if (index >= 0) {
       this._items.splice(index, 1)
     } else {
-      throw new Error('Item not found')
+      throw new Error(`Item '${key}' not found`)
     }
   }
 

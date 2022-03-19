@@ -35,7 +35,7 @@ describe('OrderedMap', () => {
 
     it('throws if key is used', () => {
       const addAction = () => sut.collection.add('item1', sut.external)
-      expect(addAction).toThrow('Item with name \'item1\' already exists')
+      expect(addAction).toThrow('Item \'item1\' already exists')
       expect(sut.collection.values).toEqual(sut.items)
     })
 
@@ -43,7 +43,7 @@ describe('OrderedMap', () => {
       const map = new OrderedMap<string, NamedItem>(KeyComparers.LocaleCaseInsensitive)
       const addAction = (key: string) => map.add(key, sut.external)
       addAction('item1')
-      expect(() => addAction('ITEM1')).toThrow('Item with name \'ITEM1\' already exists')
+      expect(() => addAction('ITEM1')).toThrow('Item \'ITEM1\' already exists')
     })
   })
 
@@ -82,7 +82,7 @@ describe('OrderedMap', () => {
     })
 
     it('throws an exception if key not found', () => {
-      expect(() => sut.collection.remove('not-found')).toThrow('Item not found')
+      expect(() => sut.collection.remove('not-found')).toThrow('Item \'not-found\' not found')
     })
   })
 
