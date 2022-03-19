@@ -36,4 +36,12 @@ export class NoteField {
   get name(): NoteFieldName {
     return this._name
   }
+
+  /**
+   * Renames the field.
+   * @param name New name of the field.
+   */
+  rename(name: NoteFieldName) {
+    this._name = name
+  }
 }
