@@ -137,8 +137,6 @@ export class OrderedMapItemMover<TKey, TItem> {
 export const KeyComparers = Object.freeze({
   Default: <T>(a: T, b: T): boolean => a === b,
   LocaleCaseInsensitive: (a: string, b: string): boolean => {
-    if (a === undefined || a === undefined) { return false }
-    if (b === undefined || b === undefined) { return false }
-    return a.toLocaleLowerCase() === b.toLocaleLowerCase()
+    return a?.toLocaleLowerCase() === b?.toLocaleLowerCase()
   }
 })

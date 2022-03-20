@@ -150,7 +150,7 @@ describe('KeyComparers', () => {
 
       expect(comparer('a', any)).toBeFalsy()
       expect(comparer(any, 'a')).toBeFalsy()
-      expect(comparer(any, any)).toBeFalsy()
+      expect(comparer(any, any)).toBeTruthy()
     })
   })
 })
