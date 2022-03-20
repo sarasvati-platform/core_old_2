@@ -134,3 +134,23 @@ describe('OrderedMap', () => {
     })
   })
 })
+
+describe('KeyComparers', () => {
+  describe('LocaleCaseInsensitive', () => {
+    it('compares strings', () => {
+      const comparer = KeyComparers.LocaleCaseInsensitive as (a: string, b: string) => boolean
+      expect(comparer('a', 'b')).toBeFalsy()
+      expect(comparer('b', 'a')).toBeFalsy()
+      expect(comparer('a', 'a')).toBeTruthy()
+    })
+
+    it('compares undefined', () => {
+      const comparer = KeyComparers.LocaleCaseInsensitive as (a: string, b: string) => boolean
+      const any: any = undefined // eslint-disable-line
+
+      expect(comparer('a', any)).toBeFalsy()
+      expect(comparer(any, 'a')).toBeFalsy()
+      expect(comparer(any, any)).toBeFalsy()
+    })
+  })
+})
