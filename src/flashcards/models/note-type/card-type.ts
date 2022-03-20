@@ -1,3 +1,4 @@
+import { Event } from '@src/core/models'
 import { Name, CardSection } from '@src/flashcards/models'
 
 /** Note type name */
@@ -7,6 +8,7 @@ export class CardTypeName extends Name {}
 export class CardType {
   private _sections = new CardSectionsCollection()
   protected _name: CardTypeName
+  private _renamed: Event<Name> = new Event<Name>()
 
   /**
    * Creates a new instance of the CardType class.
@@ -20,6 +22,8 @@ export class CardType {
     this._name = name
     sections.forEach(x => this._sections.add(x))
   }
+
+  get renamed(): Event<Name> { return this._renamed }
 
   /**
    * Returns the name of the note type
@@ -41,6 +45,7 @@ export class CardType {
    * @param name New name of the note type
    */
   rename(name: CardTypeName) {
+    this._renamed.notify(name)
     this._name = name
   }
 
@@ -80,6 +85,10 @@ class CardSectionsCollection {
    */
   public add(section: CardSection) {
     this._sections.push(section)
+  }
+
+  public remove(index: number) {
+    this._sections.splice(index, 1)
   }
 
   /**

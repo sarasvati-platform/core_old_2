@@ -70,3 +70,24 @@ export abstract class Entity<TIdentity extends Identity> {
     return this._identity.equals(other.identity)
   }
 }
+
+type EventHandler<TArgument> = (arg: TArgument) => void
+
+export class Event<TArgument> {
+  private _handlers:EventHandler<TArgument>[] = []
+
+  public subscribe(handler: EventHandler<TArgument>): void {
+    this._handlers.push(handler)
+  }
+
+  public unsubscribe(handler: EventHandler<TArgument>): void {
+    const index = this._handlers.indexOf(handler)
+    if (index !== -1) {
+      this._handlers.splice(index, 1)
+    }
+  }
+
+  public notify(arg: TArgument): void {
+    this._handlers.forEach(x => x(arg))
+  }
+}

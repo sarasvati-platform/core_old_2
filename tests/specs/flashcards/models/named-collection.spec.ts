@@ -1,8 +1,11 @@
+import { Event } from '@src/core/models'
 import { NamedCollection, Name } from '@src/flashcards/models'
 import { IHasName } from '@src/flashcards/models/named-collection'
 
 class Item implements IHasName {
-  constructor(public readonly name: Name) {}
+  private _renamed: Event<Name> = new Event<Name>()
+  constructor(public readonly name: Name) { }
+  get renamed(): Event<Name> { return this._renamed }
 }
 
 describe('NamedCollection', () => {

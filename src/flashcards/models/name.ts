@@ -5,6 +5,9 @@ export class Name {
    * @param value Name
    */
   constructor(public readonly value: string) {
+    // if (value === undefined || value === null) {
+    //   throw new Error('Name cannot be empty')
+    // }
     if (value.includes('\n')) {
       throw new Error('The name must not contain new line')
     }

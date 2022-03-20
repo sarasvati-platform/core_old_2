@@ -1,6 +1,6 @@
 import { IRepository } from '@src/core/persistence'
 import { Entity, Identity } from '@src/core/models'
-import { Card, CardId, NoteType, NoteTypeId } from '@src/flashcards/models'
+import { Card, CardId, NoteType, NoteTypeId, NoteId, Note } from '@src/flashcards/models'
 import { Expression, Operator } from '@sarasvati-platform/abstract-query'
 import { CardFields } from '@src/flashcards/models/card/queries'
 
@@ -17,7 +17,7 @@ export abstract class FakeRepository<
   public get(identity: TIdentity): TEntity {
     const value = this.noteTypes.get(identity.value)
     if (!value) {
-      throw new Error(`Note type '${identity.value}' not found`)
+      throw new Error(`Entity '${identity.value}' not found`)
     }
     return value
   }
@@ -71,9 +71,16 @@ export class FakeNoteTypeRepository extends FakeRepository<NoteTypeId, NoteType>
   }
 }
 
-export class FakeCardsRepository extends FakeRepository<CardId, Card> {
+export class FakeCardRepository extends FakeRepository<CardId, Card> {
   getFieldValue(f: string, o: Card) {
     if (f === CardFields.NoteId) { return o.note.identity.value }
     // if (f === 'type.name') { return o.type.name.value }
+  }
+}
+
+
+export class FakeNoteRepository extends FakeRepository<NoteId, Note> {
+  getFieldValue(f: string, o: Note) {
+    if (f === 'id') { return o.identity.value }
   }
 }

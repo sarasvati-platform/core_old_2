@@ -1,8 +1,11 @@
-import { OrderedMap, KeyComparers } from '@src/core/utils/collections'
+import { Event } from '@src/core/models'
+import { OrderedMap, KeyComparers, OrderedMapItemMover } from '@src/core/utils/collections'
 import { Name } from '@src/flashcards/models/name'
 
-
-export interface IHasName { get name(): Name }
+export interface IHasName {
+  get name(): Name
+  get renamed(): Event<Name>
+}
 
 export class NamedCollection<TItem extends IHasName> {
   private items: OrderedMap<string, TItem> = new OrderedMap<string, TItem>(KeyComparers.LocaleCaseInsensitive)
@@ -21,6 +24,13 @@ export class NamedCollection<TItem extends IHasName> {
    * @throws {Error} If item with same name already exists.
    */
   public add(item: TItem) {
+    item.renamed.subscribe((name: Name) => {
+      const value = this.findByName(name.value)
+      if (value) { throw new Error(`Item '${name.value}' already exists`) }
+      this.items.remove(item.name.value)
+      this.items.add(name.value, item)
+    })
+
     this.items.add(item.name.value, item)
   }
 
@@ -40,5 +50,13 @@ export class NamedCollection<TItem extends IHasName> {
    */
   public findByName(name: string): TItem | undefined {
     return this.items.find(name)
+  }
+
+  getPositionOf(item: TItem): number {
+    return this.items.getPositionOf(item.name.value)
+  }
+
+  setPositionOf(item: TItem) : OrderedMapItemMover<string, TItem> {
+    return this.items.setPositionOf(item.name.value)
   }
 }

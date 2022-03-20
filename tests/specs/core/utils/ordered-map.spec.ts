@@ -57,7 +57,7 @@ describe('OrderedMap', () => {
       expect(found).toEqual(sut.items[1])
     })
 
-    it('return an item with different comarer', () => {
+    it('return an item with locale comarer', () => {
       const map = new OrderedMap<string, NamedItem>(KeyComparers.LocaleCaseInsensitive)
       map.add('item', sut.external)
       expect(map.find('ITeM')).toEqual(sut.external)
@@ -66,6 +66,13 @@ describe('OrderedMap', () => {
     it('returns undefined if no field found', () => {
       const found = sut.collection.find('field 999')
       expect(found).toBeUndefined()
+    })
+
+    it('does not throw if undefined with locale comparer', () => {
+      const map = new OrderedMap<string, NamedItem>(KeyComparers.LocaleCaseInsensitive)
+      map.add('item', sut.external)
+      const any: any = undefined // eslint-disable-line
+      expect(() => map.find(any)).not.toThrow()
     })
   })
 

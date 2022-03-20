@@ -1,1 +1,1 @@
-export { Identity, Entity } from './entity'
+export { Identity, Entity, Event } from './entity'

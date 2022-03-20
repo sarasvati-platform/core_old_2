@@ -1,7 +1,14 @@
-import { INoteTypeRepository } from '@src/flashcards/ports/repositories'
-import { FakeNoteTypeRepository } from '@tests/ports/repositories/fake-note-type-repository'
+import { INoteTypeRepository, INoteRepository, ICardRepository } from '@src/flashcards/ports/repositories'
+import { FakeNoteTypeRepository, FakeNoteRepository, FakeCardRepository } from '@tests/ports/repositories/fake-note-type-repository'
 
 class Context {
+  clear() {
+    this.errors = []
+    this.noteTypeRepository = new FakeNoteTypeRepository()
+    this.noteRepository = new FakeNoteRepository()
+    this.cardsRepository = new FakeCardRepository()
+  }
+
   addError(error: Error) {
     this.errors.push(error)
   }
@@ -15,6 +22,8 @@ class Context {
   }
 
   public noteTypeRepository: INoteTypeRepository = new FakeNoteTypeRepository()
+  public noteRepository: INoteRepository = new FakeNoteRepository()
+  public cardsRepository: ICardRepository = new FakeCardRepository()
 
   private errors: Error[] = []
 }

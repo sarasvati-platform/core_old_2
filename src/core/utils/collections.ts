@@ -119,6 +119,9 @@ export class OrderedMapItemMover<TKey, TItem> {
 
   /** Moves the item to the specified position. */
   to(index: number) {
+    if (index < 0 || index > this._items.length) {
+      throw new Error('Index is out of range')
+    }
     const fromIndex = this.indexOf(this._key)
     const element = this._items[fromIndex]
     this._items.splice(fromIndex, 1)
@@ -134,6 +137,8 @@ export class OrderedMapItemMover<TKey, TItem> {
 export const KeyComparers = Object.freeze({
   Default: <T>(a: T, b: T):boolean => a === b,
   LocaleCaseInsensitive: (a: string, b: string):boolean => {
+    if (a && !b) { return false }
+    if (!a && b) { return false }
     return a.toLocaleLowerCase() === b.toLocaleLowerCase()
   }
 })
