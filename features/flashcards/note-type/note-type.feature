@@ -2,8 +2,7 @@ Feature: Flashcards / Manage Collection / Note Type
 
   Rule: User can have his own note types
 
-    The user can have his own note types. He can add, delete and rename
-    them.
+    User can add, delete and rename hos own note types.
 
     Scenario: User can create note type
       When User creates 'Foreign Word' note type

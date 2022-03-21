@@ -33,15 +33,7 @@ Feature: Flashcards/Note/Search
       And User can't find note by 'door'
 
     Scenario: Search is case insensitive
-      When User creates 'Foreign Word' note
+      When User creates 'Foreign Word' note:
         | Field | Value  |
         | Word  | Window |
       And User can find note by 'window'
-
-    Scenario: Search ignores punctuation marks and white spaces
-      When User creates 'Foreign Word' note
-        | Field       | Value              |
-        | Word        | Big-Window?        |
-        | Translation | ifasitela          |
-        | Example     | ifasitela elikhulu |
-      Then User can find note by 'big window'

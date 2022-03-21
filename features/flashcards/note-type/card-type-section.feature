@@ -1,4 +1,4 @@
-Feature: Flashcards/Card Type/Section
+Feature:  Flashcards / Manage Collection / Note Type / Card Type / Card Section
 
   Background:
     Given Empty deck
@@ -7,6 +7,7 @@ Feature: Flashcards/Card Type/Section
       | Field       |
       | Word        |
       | Translation |
+
 
   Rule: User can add sections to card types
 
@@ -24,18 +25,11 @@ Feature: Flashcards/Card Type/Section
         | {{Word}}        |
         | {{Translation}} |
 
-
-  Rule: User can manage sections once added
-
-    User can add additional sections or delete existing ones
-
-    Background:
+    Scenario: User can add secton later
       When User adds 'Word -> Translation' card type to the 'Foreign Word' note type with the following sections:
         | Section         |
         | {{Word}}        |
         | {{Translation}} |
-
-    Scenario: User can add card types later
       When User adds the following sections to the 'Word -> Translation' card type of the 'Foreign Word' note type:
         | Section     |
         | {{Audio}}   |
@@ -47,6 +41,15 @@ Feature: Flashcards/Card Type/Section
         | {{Audio}}       |
         | {{Example}}     |
 
+
+  Rule: User can delete sections from card types
+
+    Background:
+      When User adds 'Word -> Translation' card type to the 'Foreign Word' note type with the following sections:
+        | Section         |
+        | {{Word}}        |
+        | {{Translation}} |
+
     Scenario: User can delete sections from card type
       When User deletes 1 section from 'Word -> Translation' card type of 'Foreign Word' note type
       Then Card type 'Word -> Translation' of the 'Foreign Word' note type has the following sections:
@@ -54,7 +57,7 @@ Feature: Flashcards/Card Type/Section
         | {{Translation}} |
 
 
-  Rule: Field substitutions in sections will be replaced with real values of card fields
+  Rule: Field substitutions in sections will be replaced with real values of note fields
 
     By surrounding a field name in double curly brackets, we tell
     Sarasvati to replace that section with the actual information in the

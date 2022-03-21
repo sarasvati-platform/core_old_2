@@ -4,7 +4,9 @@ import { Note, NoteTypeId, NoteId } from '@src/flashcards/models'
 import { context } from '@tests/features/flashcards/context'
 import { CardsGenerationService } from '@src/flashcards/services/cards-generation-service'
 import { ofNote } from '@src/flashcards/models/card/queries'
+import { fieldValueContains } from '@src/flashcards/models/note/queries'
 import { IQuery } from '@src/core/persistence'
+
 
 export const noteSteps: StepDefinitions = ({ when, then }) => {
   const ntr = context.noteTypeRepository
@@ -31,9 +33,9 @@ export const noteSteps: StepDefinitions = ({ when, then }) => {
     nr.delete(new Identity(noteId) as NoteId)
   })
 
-  when(/^User can find note by '(.*)'$/, (noteId) => {
-    const note = nr.get(new Identity(noteId) as NoteId)
-    expect(note).toBeDefined()
+  when(/^User can find note by '(.*)'$/, (text) => {
+    const notes = nr.find(fieldValueContains(text, true))
+    expect(notes.length).toBeGreaterThanOrEqual(1)
   })
 
   when(/^User can't find note by '(.*)'$/, (noteId) => {

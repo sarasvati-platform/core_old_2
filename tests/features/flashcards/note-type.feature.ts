@@ -13,6 +13,7 @@ autoBindSteps([
   loadFeature('features/flashcards/note-type/card-type.feature'),
   loadFeature('features/flashcards/note-type/card-type-section.feature'),
   loadFeature('features/flashcards/note/note.feature'),
+  loadFeature('features/flashcards/note/note-search.feature'),
 ], [
   coreSteps,
   noteTypesSteps,

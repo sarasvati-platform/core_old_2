@@ -1,8 +1,9 @@
 import { IRepository } from '@src/core/persistence'
 import { Entity, Identity } from '@src/core/models'
 import { Card, CardId, NoteType, NoteTypeId, NoteId, Note } from '@src/flashcards/models'
-import { Expression, Operator } from '@sarasvati-platform/abstract-query'
+import { Predicate, Operator } from '@sarasvati-platform/abstract-query'
 import { CardFields } from '@src/flashcards/models/card/queries'
+import { NoteFields } from '@src/flashcards/models/note/queries'
 
 export abstract class FakeRepository<
   TIdentity extends Identity,
@@ -26,17 +27,22 @@ export abstract class FakeRepository<
     return this.noteTypes.has(identity.value)
   }
 
-  public find(query: Expression | Operator): readonly TEntity[] {
+  public find(query: Predicate | Operator): readonly TEntity[] {
     const o = Array.from(this.noteTypes.values())
 
-    if (query instanceof Expression) {
+    if (query instanceof Predicate) {
       if (query.operator === '=') { return o.filter(x => this.getFieldValue(query.field, x) === query.value) }
+      if (query.operator === 'in') {
+        return o.filter(
+          x => this.getFieldValue(query.field, x).map(y => y?.toLowerCase()).includes(query.value.toLowerCase())
+        )
+      }
     } else if (query instanceof Operator) {
       if (query.operator === 'and') {
-        const arrays = query.expressions.map(e => this.find(e as Expression))
+        const arrays = query.expressions.map(e => this.find(e as Predicate))
         return arrays.reduce((a, b) => a.filter(ele => b.includes(ele)))
       } else if (query.operator === 'or') {
-        return [...new Set(query.expressions.flatMap(e => this.find(e as Expression)))]
+        return [...new Set(query.expressions.flatMap(e => this.find(e as Predicate)))]
       }
       // if (q.operator === 'or') { return q.expressions.reduce((a, b) => a.concat(fetch(b, a)), o) }
       // if (q.operator === 'not') { return o.filter(x => !fetch(q.expressions[0], [x]).length) }
@@ -82,5 +88,8 @@ export class FakeCardRepository extends FakeRepository<CardId, Card> {
 export class FakeNoteRepository extends FakeRepository<NoteId, Note> {
   getFieldValue(f: string, o: Note) {
     if (f === 'id') { return o.identity.value }
+    if (f === NoteFields.FieldsValue) {
+      return o.type.fields.all.map(x => o.getFieldValue(x.name.value))
+    }
   }
 }
