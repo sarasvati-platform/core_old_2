@@ -90,6 +90,20 @@ describe('NamedCollection', () => {
   })
 
   /* -------------------------------------------------------------------------- */
+  /*                                  getByName                                 */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.getByName()', () => {
+    it('gets field by name', () => {
+      expect(sut.collection.getByName(sut.item2.name.value)).toBe(sut.item2)
+    })
+
+    it('throws if field is not found', () => {
+      expect(() => sut.collection.getByName('not-found')).toThrow()
+    })
+  })
+
+  /* -------------------------------------------------------------------------- */
   /*                                   getPositionOf                            */
   /* -------------------------------------------------------------------------- */
 

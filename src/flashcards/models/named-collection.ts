@@ -52,6 +52,17 @@ export class NamedCollection<TItem extends IHasName> {
     return this.items.find(name)
   }
 
+  /**
+   * Finds item by name.
+   * @param name Name of item to find.
+   * @returns Item with specified name or undefined if not found.
+   */
+  public getByName(name: string): TItem {
+    const item = this.findByName(name)
+    if (!item) { throw new Error(`Item '${name}' not found`) }
+    return item
+  }
+
   getPositionOf(item: TItem): number {
     return this.items.getPositionOf(item.name.value)
   }

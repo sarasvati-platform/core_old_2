@@ -4,35 +4,45 @@ import { NoteTypeId, CardTypeName, CardType } from '@src/flashcards/models'
 import { context } from '@tests/features/flashcards/context'
 
 export const noteTypeCardTypesSteps: StepDefinitions = ({ when, then }) => {
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   Helpers                                  */
+  /* -------------------------------------------------------------------------- */
+
   const ntr = context.noteTypeRepository
+
+  const guard = (func) => {
+    try { func() } catch (e) { context.addError(e) }
+  }
+
+  const addCardType = (noteTypeId: string, names: string[]) => {
+    const noteType = ntr.get(new Identity(noteTypeId) as NoteTypeId)
+    for(const name of names) {
+      noteType.cardTypes.add(new CardType(new CardTypeName(name)))
+    }
+  }
+
+  const removeCardType = (noteTypeId: string, name: string) => {
+    const noteType = ntr.get(new Identity(noteTypeId) as NoteTypeId)
+    const cardType = noteType.cardTypes.getByName(name)
+    noteType.cardTypes.remove(cardType)
+  }
+
 
   /* -------------------------------------------------------------------------- */
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
-  when(/^User adds '(.*)' card type to '(.*)' note type$/, (cardTypeName: string, noteTypeName) => {
-    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
-    const name = new CardTypeName(cardTypeName)
-    try {
-      noteType.cardTypes.add(new CardType(name))
-    } catch (e) {
-      context.addError(e)
-    }
+  when(/^User adds '(.*)' card type to '(.*)' note type$/, (name: string, noteType) => {
+    guard(() => addCardType(noteType, [name]))
+  })
+
+  when(/^User adds the following card types to the '(.*)' note type:$/, (noteType: string, cardTypes) => {
+    guard(() => addCardType(noteType, cardTypes.map(x => x['Card Type'])))
   })
 
   when(/^User removes '(.*)' card type from '(.*)' note type$/, (cardTypeName: string, noteTypeName: string) => {
-    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
-    const cardType = noteType.cardTypes.findByName(cardTypeName)
-    if (!cardType) { throw new Error(`Card type '${cardTypeName}' not found`) }
-    noteType.cardTypes.remove(cardType)
-  })
-
-  when(/^User adds the following card types to the '(.*)' note type:$/, (noteTypeName: string, cardTypesTable) => {
-    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
-    for (const cardTypeRow of cardTypesTable) {
-      const name = new CardTypeName(cardTypeRow['Card Type'])
-      noteType.cardTypes.add(new CardType(name))
-    }
+    guard(() => removeCardType(noteTypeName, cardTypeName))
   })
 
   when(/^User renames '(.*)' card type to '(.*)' of the '(.*)' note type$/, (oldCardTypeName: string, newCardTypeName: string, noteTypeName: string) => {
