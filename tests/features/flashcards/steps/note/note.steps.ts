@@ -34,7 +34,7 @@ export const noteSteps: StepDefinitions = ({ when, then }) => {
   })
 
   when(/^User can find note by '(.*)'$/, (text) => {
-    const notes = nr.find(fieldValueContains(text, true))
+    const notes = nr.find(fieldValueContains(text))
     expect(notes.length).toBeGreaterThanOrEqual(1)
   })
 

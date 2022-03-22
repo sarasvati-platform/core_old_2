@@ -104,12 +104,12 @@ export class OrderedMapItemMover<TKey, TItem> {
 
   /** Moves the item to the bottom of the collection. */
   toBottom() {
-    this.to(this._items.length)
+    this.to(this._items.length - 1)
   }
 
   /** Moves the item to the specified position. */
   after(key: TKey) {
-    this.to(this.indexOf(key) + 1)
+    this.to(this.indexOf(key))
   }
 
   /** Moves the item to the specified position. */
@@ -119,8 +119,8 @@ export class OrderedMapItemMover<TKey, TItem> {
 
   /** Moves the item to the specified position. */
   to(index: number) {
-    if (index < 0 || index > this._items.length) {
-      throw new Error('Index is out of range')
+    if (index < 0 || index >= this._items.length) {
+      throw new Error(`Index ${index} is out of range`)
     }
     const fromIndex = this.indexOf(this._key)
     const element = this._items[fromIndex]

@@ -132,6 +132,20 @@ describe('OrderedMap', () => {
       sut.collection.setPositionOf('item0').after(sut.items[2].name)
       expect(sut.collection.values).toEqual(expected)
     })
+
+    describe('.to()', () => {
+      it('throws if index is invalid', () => {
+        expect(() => sut.collection.setPositionOf('item0').to(3)).toThrow('Index 3 is out of range')
+        expect(() => sut.collection.setPositionOf('item0').to(-1)).toThrow('Index -1 is out of range')
+      })
+
+      it('throws if index is invalid', () => {
+        const expected = [sut.items[1], sut.items[2], sut.items[0]]
+        sut.collection.setPositionOf('item0').to(2)
+        expect(sut.collection.values).toEqual(expected)
+      })
+
+    })
   })
 })
 

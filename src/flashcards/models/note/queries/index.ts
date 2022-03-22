@@ -5,4 +5,4 @@ export enum NoteFields {
 }
 
 /** Returns cards of the specified note */
-export const fieldValueContains = (value: string, ignoreCase=false) : Expression => incl(NoteFields.FieldsValue, value, ignoreCase ? ['ci'] : []) as Expression
+export const fieldValueContains = (value: string) : Expression => incl(NoteFields.FieldsValue, value, ['ci', 'like']) as Expression

@@ -33,9 +33,18 @@ export abstract class FakeRepository<
     if (query instanceof Predicate) {
       if (query.operator === '=') { return o.filter(x => this.getFieldValue(query.field, x) === query.value) }
       if (query.operator === 'in') {
-        return o.filter(
-          x => this.getFieldValue(query.field, x).map(y => y?.toLowerCase()).includes(query.value.toLowerCase())
-        )
+        const getRealValues = (f, e) => {
+          const options = (query as Predicate).options
+          let values = this.getFieldValue(f, e)
+          if (options.includes('ci'))   { values = values.map(x => x?.toLowerCase()) }
+          if (options.includes('like')) { values = values.flatMap(x => x?.split(' ')) }
+          return values
+        }
+        const getRealQueryValue = (v) => {
+          if (query.options.includes('ci')) { return v?.toLowerCase() }
+        }
+        const qv = getRealQueryValue(query.value)
+        return o.filter(x => getRealValues(query.field, x).includes(qv))
       }
     } else if (query instanceof Operator) {
       if (query.operator === 'and') {

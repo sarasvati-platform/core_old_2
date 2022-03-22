@@ -88,4 +88,15 @@ describe('NamedCollection', () => {
       expect(sut.collection.findByName('not-found')).toBeUndefined()
     })
   })
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   getPositionOf                            */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.getPositionOf()', () => {
+    it('returns index', () => {
+      expect(sut.collection.getPositionOf(sut.item1)).toEqual(0)
+      expect(sut.collection.getPositionOf(sut.item3)).toEqual(2)
+    })
+  })
 })
