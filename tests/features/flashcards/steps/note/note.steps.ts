@@ -1,46 +1,28 @@
 import { StepDefinitions } from 'jest-cucumber'
 import { Identity } from '@src/core/models'
-import { Note, NoteTypeId, NoteId } from '@src/flashcards/models'
+import { NoteId } from '@src/flashcards/models'
 import { context } from '@tests/features/flashcards/context'
 import { CardsGenerationService } from '@src/flashcards/services/cards-generation-service'
 import { ofNote } from '@src/flashcards/models/card/queries'
 import { fieldValueContains } from '@src/flashcards/models/note/queries'
 import { IQuery } from '@src/core/persistence'
+import { createNote, deleteNote } from '@tests/features/flashcards/commands'
 
 
 export const noteSteps: StepDefinitions = ({ when, then }) => {
-  const ntr = context.noteTypeRepository
   const nr = context.noteRepository
+  const g = context.guard
 
   /* -------------------------------------------------------------------------- */
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
   when(/^User creates '(.*)' note:$/, (noteTypeName, fieldsTable) => {
-    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
-    const note = new Note(noteType, new Identity(fieldsTable[0]['Value']) as NoteId)
-    try {
-      for (const fieldRow of fieldsTable) {
-        note.setFieldValue(fieldRow['Field'], fieldRow['Value'])
-      }
-      nr.save(note)
-    } catch (e) {
-      context.addError(e)
-    }
+    g(() => createNote(noteTypeName, fieldsTable.map(x => [x['Field'], x['Value']])))
   })
 
   when(/^User deletes '(.*)' note$/, (noteId) => {
-    nr.delete(new Identity(noteId) as NoteId)
-  })
-
-  when(/^User can find note by '(.*)'$/, (text) => {
-    const notes = nr.find(fieldValueContains(text))
-    expect(notes.length).toBeGreaterThanOrEqual(1)
-  })
-
-  when(/^User can't find note by '(.*)'$/, (noteId) => {
-    const exists = nr.exists(new Identity(noteId) as NoteId)
-    expect(exists).toBeFalsy()
+    g(() => deleteNote(noteId))
   })
 
   /* -------------------------------------------------------------------------- */
@@ -56,5 +38,15 @@ export const noteSteps: StepDefinitions = ({ when, then }) => {
       const card = cards.find(x => x.type.name.value === cardRow['Card Type'])
       expect(card).toBeDefined()
     }
+  })
+
+  then(/^User can find note by '(.*)'$/, (text) => {
+    const notes = nr.find(fieldValueContains(text))
+    expect(notes.length).toBeGreaterThanOrEqual(1)
+  })
+
+  then(/^User can't find note by '(.*)'$/, (noteId) => {
+    const exists = nr.exists(new Identity(noteId) as NoteId)
+    expect(exists).toBeFalsy()
   })
 }

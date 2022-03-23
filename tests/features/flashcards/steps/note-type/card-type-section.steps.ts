@@ -1,39 +1,27 @@
 import { StepDefinitions } from 'jest-cucumber'
 import { Identity } from '@src/core/models'
-import { NoteTypeId, CardTypeName, CardType, CardSection } from '@src/flashcards/models'
+import { NoteTypeId } from '@src/flashcards/models'
 import { context } from '@tests/features/flashcards/context'
+import { addCardType, addSections, deleteSection } from '@tests/features/flashcards/commands'
 
 export const noteTypeCardTypeSectionsSteps: StepDefinitions = ({ when, then }) => {
   const ntr = context.noteTypeRepository
+  const g = context.guard
 
   /* -------------------------------------------------------------------------- */
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
-  when(/^User adds '(.*)' card type to the '(.*)' note type with the following sections:$/, (cardTypeName: string, noteTypeName, sectionsTable) => {
-    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
-    const name = new CardTypeName(cardTypeName)
-    const cardType = new CardType(name)
-    noteType.cardTypes.add(cardType)
-    for (const sectionRow of sectionsTable) {
-      cardType.sections.add(new CardSection(sectionRow['Section']))
-    }
+  when(/^User adds '(.*)' card type to the '(.*)' note type with the following sections:$/, (cardType: string, noteType, sections) => {
+    g(() => addCardType(noteType, cardType, sections.map(x => x['Section'])))
   })
 
-  when(/^User adds the following sections to the '(.*)' card type of the '(.*)' note type:$/, (cardTypeName: string, noteTypeName, sectionsTable) => {
-    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
-    const cardType = noteType.cardTypes.findByName(cardTypeName)
-    if (!cardType) { throw new Error(`Card type ${cardTypeName} not found in note type ${noteTypeName}`) }
-    for (const sectionRow of sectionsTable) {
-      cardType.sections.add(new CardSection(sectionRow['Section']))
-    }
+  when(/^User adds the following sections to the '(.*)' card type of the '(.*)' note type:$/, (cardType: string, noteType, sections) => {
+    g(() => addSections(noteType, cardType, sections.map(x => x['Section'])))
   })
 
-  when(/^User deletes (\d) section from '(.*)' card type of '(.*)' note type$/, (index: number, cardTypeName: string, noteTypeName) => {
-    const noteType = ntr.get(new Identity(noteTypeName) as NoteTypeId)
-    const cardType = noteType.cardTypes.findByName(cardTypeName)
-    if (!cardType) { throw new Error(`Card type ${cardTypeName} not found in note type ${noteTypeName}`) }
-    cardType.sections.remove(index-1)
+  when(/^User deletes (\d) section from '(.*)' card type of '(.*)' note type$/, (index: number, cardType: string, noteType) => {
+    g(() => deleteSection(noteType, cardType, index))
   })
 
   /* -------------------------------------------------------------------------- */

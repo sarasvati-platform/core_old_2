@@ -21,6 +21,10 @@ class Context {
     return this.errors[this.errors.length - 1]
   }
 
+  guard(func) {
+    try { func() } catch (e) { context.addError(e) }
+  }
+
   public noteTypeRepository: INoteTypeRepository = new FakeNoteTypeRepository()
   public noteRepository: INoteRepository = new FakeNoteRepository()
   public cardsRepository: ICardRepository = new FakeCardRepository()
