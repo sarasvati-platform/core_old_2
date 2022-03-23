@@ -1,5 +1,8 @@
 Feature: Flashcards / Manage Collection / Note Type
 
+  Background:
+    Given Empty deck
+
   Rule: User can have his own note types
 
     User can add, delete and rename hos own note types.

@@ -22,14 +22,20 @@ class Context {
   }
 
   guard(func) {
-    try { func() } catch (e) { context.addError(e) }
+    try { func() } catch (e) { this.addError(e) }
   }
 
-  public noteTypeRepository: INoteTypeRepository = new FakeNoteTypeRepository()
-  public noteRepository: INoteRepository = new FakeNoteRepository()
-  public cardsRepository: ICardRepository = new FakeCardRepository()
+  public noteTypeRepository: INoteTypeRepository
+  public noteRepository: INoteRepository
+  public cardsRepository: ICardRepository
 
   private errors: Error[] = []
 }
 
 export const context = new Context()
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const guard = (fn: (...args: any[]) => any) => {
+  return function(...args: any[]): any {
+    try { return fn(...args) } catch (e) { context.addError(e) }
+  }
+}

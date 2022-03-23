@@ -1,36 +1,35 @@
-import { StepDefinitions } from 'jest-cucumber'
 import { Identity } from '@src/core/models'
+import { IQuery } from '@src/core/persistence'
 import { NoteId } from '@src/flashcards/models'
-import { context } from '@tests/features/flashcards/context'
-import { CardsGenerationService } from '@src/flashcards/services/cards-generation-service'
 import { ofNote } from '@src/flashcards/models/card/queries'
 import { fieldValueContains } from '@src/flashcards/models/note/queries'
-import { IQuery } from '@src/core/persistence'
+import { CardsGenerationService } from '@src/flashcards/services/cards-generation-service'
 import { createNote, deleteNote } from '@tests/features/flashcards/commands'
+import { context, guard } from '@tests/features/flashcards/context'
+import { StepDefinitions } from 'jest-cucumber'
 
 
 export const noteSteps: StepDefinitions = ({ when, then }) => {
-  const nr = context.noteRepository
-  const g = context.guard
+  const nr = () => context.noteRepository
 
   /* -------------------------------------------------------------------------- */
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
-  when(/^User creates '(.*)' note:$/, (noteTypeName, fieldsTable) => {
-    g(() => createNote(noteTypeName, fieldsTable.map(x => [x['Field'], x['Value']])))
-  })
+  when(/^User creates '(.*)' note:$/, guard((noteTypeName, fieldsTable) => {
+    createNote(noteTypeName, fieldsTable.map(x => [x['Field'], x['Value']]))
+  }))
 
-  when(/^User deletes '(.*)' note$/, (noteId) => {
-    g(() => deleteNote(noteId))
-  })
+  when(/^User deletes '(.*)' note$/, guard((noteId) => {
+    deleteNote(noteId)
+  }))
 
   /* -------------------------------------------------------------------------- */
   /*                                    Then                                    */
   /* -------------------------------------------------------------------------- */
 
   then(/^Note '(.*)' has the following cards:$/, (noteId, cardsTable) => {
-    const note = nr.get(new Identity(noteId) as NoteId)
+    const note = nr().get(new Identity(noteId) as NoteId)
     const cardsGenerator = new CardsGenerationService(context.cardsRepository)
     cardsGenerator.generate(note)
     const cards = context.cardsRepository.find(ofNote(note) as IQuery)
@@ -41,12 +40,12 @@ export const noteSteps: StepDefinitions = ({ when, then }) => {
   })
 
   then(/^User can find note by '(.*)'$/, (text) => {
-    const notes = nr.find(fieldValueContains(text))
+    const notes = nr().find(fieldValueContains(text))
     expect(notes.length).toBeGreaterThanOrEqual(1)
   })
 
   then(/^User can't find note by '(.*)'$/, (noteId) => {
-    const exists = nr.exists(new Identity(noteId) as NoteId)
+    const exists = nr().exists(new Identity(noteId) as NoteId)
     expect(exists).toBeFalsy()
   })
 }
