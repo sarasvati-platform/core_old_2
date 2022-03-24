@@ -1,5 +1,6 @@
 import { INoteTypeRepository, INoteRepository, ICardRepository } from '@src/flashcards/ports/repositories'
 import { FakeNoteTypeRepository, FakeNoteRepository, FakeCardRepository } from '@tests/ports/repositories/fake-note-type-repository'
+import { ManageCollectionStructure } from './commands'
 
 class Context {
   clear() {
@@ -7,6 +8,12 @@ class Context {
     this.noteTypeRepository = new FakeNoteTypeRepository()
     this.noteRepository = new FakeNoteRepository()
     this.cardsRepository = new FakeCardRepository()
+    this.manageCollection = new ManageCollectionStructure(
+      this.noteTypeRepository,
+      this.noteRepository
+    )
+  }
+
   }
 
   addError(error: Error) {
@@ -28,6 +35,7 @@ class Context {
   public noteTypeRepository: INoteTypeRepository
   public noteRepository: INoteRepository
   public cardsRepository: ICardRepository
+  public manageCollection: ManageCollectionStructure
 
   private errors: Error[] = []
 }

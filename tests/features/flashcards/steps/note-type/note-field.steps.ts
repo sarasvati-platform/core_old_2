@@ -1,9 +1,7 @@
 import { Identity } from '@src/core/models'
 import { NoteTypeId } from '@src/flashcards/models'
-import { addField, changeFieldPosition, removeField, renameField } from '@tests/features/flashcards/commands'
 import { context, guard } from '@tests/features/flashcards/context'
 import { StepDefinitions } from 'jest-cucumber'
-
 
 export const noteTypeFieldsSteps: StepDefinitions = ({ when, then }) => {
   const ntr = () => context.noteTypeRepository
@@ -17,23 +15,23 @@ export const noteTypeFieldsSteps: StepDefinitions = ({ when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^User adds '(.*)' field to the '(.*)' note type$/, guard((field: string, noteType) => {
-    addField(noteType, convertFields([field]))
+    context.manageCollection.addField(noteType, convertFields([field]))
   }))
 
   when(/^User adds the following fields to the '(.*)' note type:$/, guard((noteType: string, fields) => {
-    addField(noteType, convertFields(fields.map(x => x['Field'])))
+    context.manageCollection.addField(noteType, convertFields(fields.map(x => x['Field'])))
   }))
 
   when(/^User removes '(.*)' field from '(.*)' note type$/, guard((fieldName: string, noteTypeName: string) => {
-    removeField(noteTypeName, [fieldName])
+    context.manageCollection.removeField(noteTypeName, [fieldName])
   }))
 
   when(/^User renames '(.*)' field to '(.*)' of the '(.*)' note type$/, guard((oldName: string, newName: string, noteTypeName: string) => {
-    renameField(noteTypeName, oldName, newName)
+    context.manageCollection.renameField(noteTypeName, oldName, newName)
   }))
 
   when(/^User changes position of '(.*)' field of '(.*)' note type to (-?\d+)$/, guard((field, noteType, position) => {
-    changeFieldPosition(noteType, field, parseInt(position))
+    context.manageCollection.changeFieldPosition(noteType, field, parseInt(position))
   }))
 
   /* -------------------------------------------------------------------------- */

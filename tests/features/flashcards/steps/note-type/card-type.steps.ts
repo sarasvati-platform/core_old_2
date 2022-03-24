@@ -1,6 +1,5 @@
 import { Identity } from '@src/core/models'
 import { NoteTypeId } from '@src/flashcards/models'
-import { addCardTypes, changeCardTypePosition, removeCardType, renameCardType } from '@tests/features/flashcards/commands'
 import { context, guard } from '@tests/features/flashcards/context'
 import { StepDefinitions } from 'jest-cucumber'
 
@@ -12,23 +11,23 @@ export const noteTypeCardTypesSteps: StepDefinitions = ({ when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^User adds '(.*)' card type to '(.*)' note type$/, guard((name: string, noteType) => {
-    addCardTypes(noteType, [name])
+    context.manageCollection.addCardTypes(noteType, [name])
   }))
 
   when(/^User adds the following card types to the '(.*)' note type:$/, guard((noteType: string, cardTypes) => {
-    addCardTypes(noteType, cardTypes.map(x => x['Card Type']))
+    context.manageCollection.addCardTypes(noteType, cardTypes.map(x => x['Card Type']))
   }))
 
   when(/^User removes '(.*)' card type from '(.*)' note type$/, guard((cardTypeName: string, noteTypeName: string) => {
-    removeCardType(noteTypeName, cardTypeName)
+    context.manageCollection.removeCardType(noteTypeName, cardTypeName)
   }))
 
   when(/^User renames '(.*)' card type to '(.*)' of the '(.*)' note type$/, guard((oldName: string, newCardType: string, noteType: string) => {
-    renameCardType(noteType, oldName, newCardType)
+    context.manageCollection.renameCardType(noteType, oldName, newCardType)
   }))
 
   when(/^User changes position of '(.*)' card type of '(.*)' note type to (-?\d+)$/, guard((cardType, noteType, position) => {
-    changeCardTypePosition(noteType, cardType, parseInt(position))
+    context.manageCollection.changeCardTypePosition(noteType, cardType, parseInt(position))
   }))
 
   /* -------------------------------------------------------------------------- */

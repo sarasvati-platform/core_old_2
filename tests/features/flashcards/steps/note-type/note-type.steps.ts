@@ -1,6 +1,5 @@
 import { Identity } from '@src/core/models'
 import { NoteTypeId } from '@src/flashcards/models'
-import { createNoteType, deleteNoteType, renameNoteType } from '@tests/features/flashcards/commands'
 import { context, guard } from '@tests/features/flashcards/context'
 import { StepDefinitions } from 'jest-cucumber'
 
@@ -12,19 +11,19 @@ export const noteTypesSteps: StepDefinitions = ({ when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^User creates '(.*)' note type$/, guard((name) => {
-    createNoteType(name, [])
+    context.manageCollection.createNoteType(name, [])
   }))
 
   when(/^User creates '(.*)' note type with the following fields:$/, guard((name, fields) => {
-    createNoteType(name, fields.map(x => x['Field']))
+    context.manageCollection.createNoteType(name, fields.map(x => x['Field']))
   }))
 
   when(/^User deletes '(.*)' note type$/, guard((name) => {
-    deleteNoteType(name)
+    context.manageCollection.deleteNoteType(name)
   }))
 
   when(/^User renames '(.*)' note type to '(.*)'$/, guard((name, newName) => {
-    renameNoteType(name, newName)
+    context.manageCollection.renameNoteType(name, newName)
   }))
 
   /* -------------------------------------------------------------------------- */

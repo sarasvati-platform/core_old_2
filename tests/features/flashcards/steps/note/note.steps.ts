@@ -4,10 +4,8 @@ import { NoteId } from '@src/flashcards/models'
 import { ofNote } from '@src/flashcards/models/card/queries'
 import { fieldValueContains } from '@src/flashcards/models/note/queries'
 import { CardsGenerationService } from '@src/flashcards/services/cards-generation-service'
-import { createNote, deleteNote } from '@tests/features/flashcards/commands'
 import { context, guard } from '@tests/features/flashcards/context'
 import { StepDefinitions } from 'jest-cucumber'
-
 
 export const noteSteps: StepDefinitions = ({ when, then }) => {
   const nr = () => context.noteRepository
@@ -17,11 +15,11 @@ export const noteSteps: StepDefinitions = ({ when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^User creates '(.*)' note:$/, guard((noteTypeName, fieldsTable) => {
-    createNote(noteTypeName, fieldsTable.map(x => [x['Field'], x['Value']]))
+    context.manageCollection.createNote(noteTypeName, fieldsTable.map(x => [x['Field'], x['Value']]))
   }))
 
   when(/^User deletes '(.*)' note$/, guard((noteId) => {
-    deleteNote(noteId)
+    context.manageCollection.deleteNote(noteId)
   }))
 
   /* -------------------------------------------------------------------------- */

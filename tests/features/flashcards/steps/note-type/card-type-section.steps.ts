@@ -1,6 +1,5 @@
 import { Identity } from '@src/core/models'
 import { NoteTypeId } from '@src/flashcards/models'
-import { addCardType, addSections, deleteSection } from '@tests/features/flashcards/commands'
 import { context, guard } from '@tests/features/flashcards/context'
 import { StepDefinitions } from 'jest-cucumber'
 
@@ -12,15 +11,15 @@ export const noteTypeCardTypeSectionsSteps: StepDefinitions = ({ when, then }) =
   /* -------------------------------------------------------------------------- */
 
   when(/^User adds '(.*)' card type to the '(.*)' note type with the following sections:$/, guard((cardType: string, noteType, sections) => {
-    addCardType(noteType, cardType, sections.map(x => x['Section']))
+    context.manageCollection.addCardType(noteType, cardType, sections.map(x => x['Section']))
   }))
 
   when(/^User adds the following sections to the '(.*)' card type of the '(.*)' note type:$/, guard((cardType: string, noteType, sections) => {
-    addSections(noteType, cardType, sections.map(x => x['Section']))
+    context.manageCollection.addSections(noteType, cardType, sections.map(x => x['Section']))
   }))
 
   when(/^User deletes (\d) section from '(.*)' card type of '(.*)' note type$/, guard((index: number, cardType: string, noteType) => {
-    deleteSection(noteType, cardType, index)
+    context.manageCollection.deleteSection(noteType, cardType, index)
   }))
 
   /* -------------------------------------------------------------------------- */
