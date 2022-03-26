@@ -1,5 +1,5 @@
 import { FakeRepository } from '@tests/ports/repositories/fake-note-type-repository'
-import { eq, and, or, not } from '@sarasvati-platform/abstract-query'
+import { eq, and, or } from '@sarasvati-platform/abstract-query'
 import { Entity, Identity } from '@src/core/models'
 
 

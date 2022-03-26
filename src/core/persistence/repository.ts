@@ -1,7 +1,7 @@
 import { Identity, Entity } from '@src/core/models'
-import { Expression, Operator } from '@sarasvati-platform/abstract-query'
+import { Expression } from '@sarasvati-platform/abstract-query'
 
-export type IQuery = Expression | Operator
+export type IQuery = Expression
 
 /**
  * Interface for a repository.

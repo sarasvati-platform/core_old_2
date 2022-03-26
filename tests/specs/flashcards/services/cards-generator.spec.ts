@@ -1,12 +1,12 @@
 import { Note, NoteType, CardType, CardTypeName, NoteTypeName, NoteField, NoteFieldName, CardSection } from '@src/flashcards/models'
 import { CardsGenerationService, CardsGenerationActionType } from '@src/flashcards/services/cards-generation-service'
-import { FakeCardsRepository } from '@tests/ports/repositories/fake-note-type-repository'
+import { FakeCardRepository } from '@tests/ports/repositories/fake-note-type-repository'
 
 describe('CardsGenerationService', () => {
   let sut: {
     note: Note,
     generator: CardsGenerationService,
-    cardsRepository: FakeCardsRepository
+    cardsRepository: FakeCardRepository
   }
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('CardsGenerationService', () => {
     note.setFieldValue('country', 'Ukraine')
     note.setFieldValue('capital', 'Kiev')
 
-    const cardsRepository = new FakeCardsRepository()
+    const cardsRepository = new FakeCardRepository()
 
     sut = {
       note,

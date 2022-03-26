@@ -41,7 +41,7 @@
     "build": "tsc && resolve-tspaths"
   },
   "dependencies": {
-    "@sarasvati-platform/abstract-query": "^0.1.0",
+    "@sarasvati-platform/abstract-query": "^0.1.2",
     "uuid": "^8.3.2"
   }
 }

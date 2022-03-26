@@ -35,7 +35,7 @@ describe('OrderedMap', () => {
 
     it('throws if key is used', () => {
       const addAction = () => sut.collection.add('item1', sut.external)
-      expect(addAction).toThrow('Item with name \'item1\' already exists')
+      expect(addAction).toThrow('Item \'item1\' already exists')
       expect(sut.collection.values).toEqual(sut.items)
     })
 
@@ -43,7 +43,7 @@ describe('OrderedMap', () => {
       const map = new OrderedMap<string, NamedItem>(KeyComparers.LocaleCaseInsensitive)
       const addAction = (key: string) => map.add(key, sut.external)
       addAction('item1')
-      expect(() => addAction('ITEM1')).toThrow('Item with name \'ITEM1\' already exists')
+      expect(() => addAction('ITEM1')).toThrow('Item \'ITEM1\' already exists')
     })
   })
 
@@ -57,7 +57,7 @@ describe('OrderedMap', () => {
       expect(found).toEqual(sut.items[1])
     })
 
-    it('return an item with different comarer', () => {
+    it('return an item with locale comarer', () => {
       const map = new OrderedMap<string, NamedItem>(KeyComparers.LocaleCaseInsensitive)
       map.add('item', sut.external)
       expect(map.find('ITeM')).toEqual(sut.external)
@@ -66,6 +66,13 @@ describe('OrderedMap', () => {
     it('returns undefined if no field found', () => {
       const found = sut.collection.find('field 999')
       expect(found).toBeUndefined()
+    })
+
+    it('does not throw if undefined with locale comparer', () => {
+      const map = new OrderedMap<string, NamedItem>(KeyComparers.LocaleCaseInsensitive)
+      map.add('item', sut.external)
+      const any: any = undefined // eslint-disable-line
+      expect(() => map.find(any)).not.toThrow()
     })
   })
 
@@ -82,7 +89,7 @@ describe('OrderedMap', () => {
     })
 
     it('throws an exception if key not found', () => {
-      expect(() => sut.collection.remove('not-found')).toThrow('Item not found')
+      expect(() => sut.collection.remove('not-found')).toThrow('Item \'not-found\' not found')
     })
   })
 
@@ -124,6 +131,40 @@ describe('OrderedMap', () => {
       const expected = [sut.items[1], sut.items[2], sut.items[0]]
       sut.collection.setPositionOf('item0').after(sut.items[2].name)
       expect(sut.collection.values).toEqual(expected)
+    })
+
+    describe('.to()', () => {
+      it('throws if index is invalid', () => {
+        expect(() => sut.collection.setPositionOf('item0').to(3)).toThrow('Index 3 is out of range')
+        expect(() => sut.collection.setPositionOf('item0').to(-1)).toThrow('Index -1 is out of range')
+      })
+
+      it('throws if index is invalid', () => {
+        const expected = [sut.items[1], sut.items[2], sut.items[0]]
+        sut.collection.setPositionOf('item0').to(2)
+        expect(sut.collection.values).toEqual(expected)
+      })
+
+    })
+  })
+})
+
+describe('KeyComparers', () => {
+  describe('LocaleCaseInsensitive', () => {
+    it('compares strings', () => {
+      const comparer = KeyComparers.LocaleCaseInsensitive as (a: string, b: string) => boolean
+      expect(comparer('a', 'b')).toBeFalsy()
+      expect(comparer('b', 'a')).toBeFalsy()
+      expect(comparer('a', 'a')).toBeTruthy()
+    })
+
+    it('compares undefined', () => {
+      const comparer = KeyComparers.LocaleCaseInsensitive as (a: string, b: string) => boolean
+      const any: any = undefined // eslint-disable-line
+
+      expect(comparer('a', any)).toBeFalsy()
+      expect(comparer(any, 'a')).toBeFalsy()
+      expect(comparer(any, any)).toBeTruthy()
     })
   })
 })

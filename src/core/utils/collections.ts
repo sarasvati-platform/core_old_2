@@ -43,7 +43,7 @@ export class OrderedMap<TKey, TItem> {
    */
   add(key: TKey, item: TItem) : void {
     if (this.find(key)) {
-      throw new Error(`Item with name '${key}' already exists`)
+      throw new Error(`Item '${key}' already exists`)
     }
     this._items.push([key, item])
   }
@@ -57,7 +57,7 @@ export class OrderedMap<TKey, TItem> {
     if (index >= 0) {
       this._items.splice(index, 1)
     } else {
-      throw new Error('Item not found')
+      throw new Error(`Item '${key}' not found`)
     }
   }
 
@@ -104,12 +104,12 @@ export class OrderedMapItemMover<TKey, TItem> {
 
   /** Moves the item to the bottom of the collection. */
   toBottom() {
-    this.to(this._items.length)
+    this.to(this._items.length - 1)
   }
 
   /** Moves the item to the specified position. */
   after(key: TKey) {
-    this.to(this.indexOf(key) + 1)
+    this.to(this.indexOf(key))
   }
 
   /** Moves the item to the specified position. */
@@ -119,6 +119,9 @@ export class OrderedMapItemMover<TKey, TItem> {
 
   /** Moves the item to the specified position. */
   to(index: number) {
+    if (index < 0 || index >= this._items.length) {
+      throw new Error(`Index ${index} is out of range`)
+    }
     const fromIndex = this.indexOf(this._key)
     const element = this._items[fromIndex]
     this._items.splice(fromIndex, 1)
@@ -132,8 +135,8 @@ export class OrderedMapItemMover<TKey, TItem> {
 }
 
 export const KeyComparers = Object.freeze({
-  Default: <T>(a: T, b: T):boolean => a === b,
-  LocaleCaseInsensitive: (a: string, b: string):boolean => {
-    return a.toLocaleLowerCase() === b.toLocaleLowerCase()
+  Default: <T>(a: T, b: T): boolean => a === b,
+  LocaleCaseInsensitive: (a: string, b: string): boolean => {
+    return a?.toLocaleLowerCase() === b?.toLocaleLowerCase()
   }
 })
