@@ -35,15 +35,27 @@ export class DeleteNoteType extends Command<void> {
 }
 
 export class RenameNoteType extends Command<void> {
+  private oldName: NoteTypeName
+
   constructor(
     private readonly noteTypeId: NoteTypeId,
     private readonly newName: NoteTypeName
-  ) { super() }
+  ) {
+    super()
+  }
 
   execute(context: CommandContext) {
     const repository = context.get('noteTypeRepository') as INoteTypeRepository
     const noteType = repository.get(this.noteTypeId)
+    this.oldName = noteType.name
     noteType.rename(this.newName)
+    repository.save(noteType)
+  }
+
+  undo(context: CommandContext) {
+    const repository = context.get('noteTypeRepository') as INoteTypeRepository
+    const noteType = repository.get(this.noteTypeId)
+    noteType.rename(this.oldName)
     repository.save(noteType)
   }
 }
