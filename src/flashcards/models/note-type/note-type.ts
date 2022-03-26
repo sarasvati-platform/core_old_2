@@ -1,4 +1,4 @@
-import { Entity, Identity } from '@src/core/models'
+import { Entity, Identity, Event } from '@src/core/models'
 import { Name, NoteField, CardType } from '@src/flashcards/models'
 import { NamedCollection } from '../named-collection'
 
@@ -16,6 +16,7 @@ export class NoteType extends Entity<NoteTypeId> {
   protected _name: NoteTypeName
   protected _fields = new NamedCollection<NoteField>()
   protected _cardTypes = new NamedCollection<CardType>()
+  private _renamed = new Event<NoteTypeName>()
 
   /**
    * Creates a new instance of the NoteType class
@@ -30,19 +31,21 @@ export class NoteType extends Entity<NoteTypeId> {
     this._name = name
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                                   Events                                   */
+  /* -------------------------------------------------------------------------- */
+
+  get renamed(): Event<NoteTypeName> { return this._renamed }
+
+  /* -------------------------------------------------------------------------- */
+  /*                                 Properties                                 */
+  /* -------------------------------------------------------------------------- */
+
   /**
    * Returns the name of the note type
    */
   get name(): NoteTypeName {
     return this._name
-  }
-
-  /**
-   * Renames note type
-   * @param name New name of the note type
-   */
-  rename(name: NoteTypeName) {
-    this._name = name
   }
 
   /**
@@ -54,10 +57,23 @@ export class NoteType extends Entity<NoteTypeId> {
   }
 
   /**
-   * Returns the card types of the note type
-   * @returns Card types of the note type
-   */
+     * Returns the card types of the note type
+     * @returns Card types of the note type
+     */
   get cardTypes(): NamedCollection<CardType> {
     return this._cardTypes
+  }
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   Actions                                  */
+  /* -------------------------------------------------------------------------- */
+
+  /**
+   * Renames note type
+   * @param name New name of the note type
+   */
+  rename(name: NoteTypeName) {
+    this._name = name
+    this._renamed.notify(name)
   }
 }
