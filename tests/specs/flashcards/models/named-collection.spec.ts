@@ -99,7 +99,7 @@ describe('NamedCollection', () => {
     })
 
     it('throws if field is not found', () => {
-      expect(() => sut.collection.getByName('not-found')).toThrow()
+      expect(() => sut.collection.getByName('not-found')).toThrow('Item \'not-found\' not found')
     })
   })
 

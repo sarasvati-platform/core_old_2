@@ -1,5 +1,5 @@
 import { Identity } from '@src/core/models'
-import { CardSection, CardType, CardTypeName, Note, NoteField, NoteFieldName, NoteId, NoteType, NoteTypeId, NoteTypeName } from '@src/flashcards/models'
+import { CardSection, CardType, CardTypeName, Note, NoteField, NoteFieldName, NoteId, NoteTypeId } from '@src/flashcards/models'
 import { INoteRepository, INoteTypeRepository } from '@src/flashcards/ports/repositories'
 
 /* -------------------------------------------------------------------------- */
@@ -11,29 +11,6 @@ export class ManageCollectionStructure {
     private ntr: INoteTypeRepository,
     private nr: INoteRepository
   ) {}
-
-  createNoteType(name: string, fields: string[]) {
-    const noteType = new NoteType(
-      new NoteTypeName(name),
-      new Identity(name) as NoteTypeId
-    )
-    for(const field of fields) {
-      noteType.fields.add(
-        new NoteField(new NoteFieldName(field))
-      )
-    }
-    this.ntr.save(noteType)
-  }
-
-  deleteNoteType(name: string) {
-    this.ntr.delete(new Identity(name) as NoteTypeId)
-  }
-
-  renameNoteType(name: string, newName: string) {
-    const noteType = this.ntr.get(new Identity(name) as NoteTypeId)
-    noteType.rename(new NoteTypeName(newName))
-    this.ntr.save(noteType)
-  }
 
   addField(noteTypeId: string, fields: string[]) {
     const noteType = this.ntr.get(new Identity(noteTypeId) as NoteTypeId)

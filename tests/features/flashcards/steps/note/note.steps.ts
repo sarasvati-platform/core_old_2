@@ -38,7 +38,7 @@ export const noteSteps: StepDefinitions = ({ when, then }) => {
   })
 
   then(/^User can find note by '(.*)'$/, (text) => {
-    const notes = nr().find(fieldValueContains(text))
+    const notes = nr().find(fieldValueContains(text) as IQuery)
     expect(notes.length).toBeGreaterThanOrEqual(1)
   })
 

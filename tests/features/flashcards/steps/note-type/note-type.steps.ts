@@ -1,6 +1,7 @@
 import { Identity } from '@src/core/models'
-import { NoteTypeId } from '@src/flashcards/models'
-import { context, guard } from '@tests/features/flashcards/context'
+import { CreateNoteType, DeleteNoteType, RenameNoteType } from '@src/flashcards/commands/note-type'
+import { NoteField, NoteFieldName, NoteTypeId, NoteTypeName } from '@src/flashcards/models'
+import { context, ex } from '@tests/features/flashcards/context'
 import { StepDefinitions } from 'jest-cucumber'
 
 export const noteTypesSteps: StepDefinitions = ({ when, then }) => {
@@ -10,20 +11,30 @@ export const noteTypesSteps: StepDefinitions = ({ when, then }) => {
   /*                                    When                                    */
   /* -------------------------------------------------------------------------- */
 
-  when(/^User creates '(.*)' note type$/, guard((name) => {
-    context.manageCollection.createNoteType(name, [])
+  when(/^User creates '(.*)' note type$/, ex((name) => {
+    return new CreateNoteType(
+      new NoteTypeName(name), [],
+      new Identity(name) as NoteTypeId
+    )
   }))
 
-  when(/^User creates '(.*)' note type with the following fields:$/, guard((name, fields) => {
-    context.manageCollection.createNoteType(name, fields.map(x => x['Field']))
+  when(/^User creates '(.*)' note type with the following fields:$/, ex((name, fields) => {
+    return new CreateNoteType(
+      new NoteTypeName(name),
+      fields.map(f => new NoteField(new NoteFieldName(f['Field']))),
+      new Identity(name) as NoteTypeId
+    )
   }))
 
-  when(/^User deletes '(.*)' note type$/, guard((name) => {
-    context.manageCollection.deleteNoteType(name)
+  when(/^User deletes '(.*)' note type$/, ex((name) => {
+    return new DeleteNoteType(new Identity(name) as NoteTypeId)
   }))
 
-  when(/^User renames '(.*)' note type to '(.*)'$/, guard((name, newName) => {
-    context.manageCollection.renameNoteType(name, newName)
+  when(/^User renames '(.*)' note type to '(.*)'$/, ex((name, newName) => {
+    return new RenameNoteType(
+      new Identity(name) as NoteTypeId,
+      new NoteTypeName(newName)
+    )
   }))
 
   /* -------------------------------------------------------------------------- */
