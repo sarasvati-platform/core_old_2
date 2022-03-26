@@ -1,9 +1,7 @@
-export interface IService {}
-
 export class CommandContext {
-  private _services: Map<string, IService> = new Map()
+  private _services: Map<string, any> = new Map()
 
-  register(name: string, value: IService) {
+  register(name: string, value: any) {
     if (this._services.has(name)) {
       throw new Error(`Service with type ${name} already registered`)
     }

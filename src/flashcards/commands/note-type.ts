@@ -1,6 +1,6 @@
 import { Command, CommandContext } from '@src/core/commands/commands'
 import { Identity } from '@src/core/models'
-import { NoteType, NoteTypeId, NoteTypeName, NoteField, NoteFieldName } from '@src/flashcards/models'
+import { NoteType, NoteTypeId, NoteTypeName, NoteField } from '@src/flashcards/models'
 import { INoteTypeRepository } from '@src/flashcards/ports/repositories'
 
 export class CreateNoteType extends Command<NoteType> {

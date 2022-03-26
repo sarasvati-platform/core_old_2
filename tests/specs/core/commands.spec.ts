@@ -1,6 +1,6 @@
-import { CommandContext, IService } from '@src/core/commands/commands'
+import { CommandContext } from '@src/core/commands/commands'
 
-class DummyService implements IService {}
+class DummyService {}
 
 describe('The CommandContext instance', () => {
   let sut: CommandContext = new CommandContext()

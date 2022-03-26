@@ -1,5 +1,5 @@
 import { Entity, Identity } from '@src/core/models'
-import { CardType, Note, CardSchedule } from '@src/flashcards/models'
+import { CardType, Note } from '@src/flashcards/models'
 
 /** Identity for [card]{@link Card} */
 export type CardId = Identity & { type: 'Card' }
