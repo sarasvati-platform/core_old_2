@@ -10,6 +10,17 @@ export interface IHasName {
 export class NamedCollection<TItem extends IHasName> {
   private items: OrderedMap<string, TItem> = new OrderedMap<string, TItem>(KeyComparers.LocaleCaseInsensitive)
 
+  /* -------------------------------------------------------------------------- */
+  /*                                   Events                                   */
+  /* -------------------------------------------------------------------------- */
+
+  public readonly added = new Event<TItem>()
+  public readonly removed = new Event<TItem>()
+
+  /* -------------------------------------------------------------------------- */
+  /*                                  Propertes                                 */
+  /* -------------------------------------------------------------------------- */
+
   /**
    * Returns all items in collection.
    * @returns {TItem[]} Array of items.
@@ -18,6 +29,10 @@ export class NamedCollection<TItem extends IHasName> {
     return this.items.values
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                                   Actions                                  */
+  /* -------------------------------------------------------------------------- */
+
   /**
    * Adds item to collection.
    * @param item Item to add.
@@ -25,13 +40,11 @@ export class NamedCollection<TItem extends IHasName> {
    */
   public add(item: TItem) {
     item.renamed.subscribe((name: Name) => {
-      const value = this.findByName(name.value)
-      if (value) { throw new Error(`Item '${name.value}' already exists`) }
-      this.items.remove(item.name.value)
-      this.items.add(name.value, item)
+      this.items.changeKey(item.name.value, name.value)
     })
 
     this.items.add(item.name.value, item)
+    this.added.notify(item)
   }
 
   /**
@@ -41,6 +54,7 @@ export class NamedCollection<TItem extends IHasName> {
    */
   public remove(item: TItem) {
     this.items.remove(item.name.value)
+    this.removed.notify(item)
   }
 
   /**

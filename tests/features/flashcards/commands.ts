@@ -1,5 +1,5 @@
 import { Identity } from '@src/core/models'
-import { CardSection, CardType, CardTypeName, Note, NoteField, NoteFieldName, NoteId, NoteTypeId } from '@src/flashcards/models'
+import { CardSection, CardType, CardTypeName, Note, NoteId, NoteTypeId } from '@src/flashcards/models'
 import { INoteRepository, INoteTypeRepository } from '@src/flashcards/ports/repositories'
 
 /* -------------------------------------------------------------------------- */
@@ -11,37 +11,6 @@ export class ManageCollectionStructure {
     private ntr: INoteTypeRepository,
     private nr: INoteRepository
   ) {}
-
-  addField(noteTypeId: string, fields: string[]) {
-    const noteType = this.ntr.get(new Identity(noteTypeId) as NoteTypeId)
-    for(const field of fields) {
-      const name = new NoteFieldName(field)
-      noteType.fields.add(new NoteField(name))
-    }
-    this.ntr.save(noteType)
-  }
-
-  removeField(noteTypeId: string, fields: string[]) {
-    const noteType = this.ntr.get(new Identity(noteTypeId) as NoteTypeId)
-    for(const field of fields) {
-      const f = noteType.fields.getByName(field)
-      noteType.fields.remove(f)
-    }
-    this.ntr.save(noteType)
-  }
-
-  renameField(noteTypeId: string, field: string, newName: string) {
-    const noteType = this.ntr.get(new Identity(noteTypeId) as NoteTypeId)
-    const f = noteType.fields.getByName(field)
-    f.rename(new NoteFieldName(newName))
-    this.ntr.save(noteType)
-  }
-
-  changeFieldPosition(noteTypeId: string, field: string, index: number) {
-    const noteType = this.ntr.get(new Identity(noteTypeId) as NoteTypeId)
-    const f = noteType.fields.getByName(field)
-    noteType.fields.setPositionOf(f).to(index)
-  }
 
   addCardTypes(noteTypeId: string, names: string[]) {
     const noteType = this.ntr.get(new Identity(noteTypeId) as NoteTypeId)

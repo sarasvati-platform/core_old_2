@@ -4,7 +4,7 @@ import { IHasName } from '@src/flashcards/models/named-collection'
 
 class Item implements IHasName {
   private _renamed: Event<Name> = new Event<Name>()
-  constructor(public readonly name: Name) { }
+  constructor(public name: Name) { }
   get renamed(): Event<Name> { return this._renamed }
 }
 
@@ -111,6 +111,18 @@ describe('NamedCollection', () => {
     it('returns index', () => {
       expect(sut.collection.getPositionOf(sut.item1)).toEqual(0)
       expect(sut.collection.getPositionOf(sut.item3)).toEqual(2)
+    })
+  })
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   rename                                   */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.item.rename()', () => {
+    it('should not change position', () => {
+      sut.item1.renamed.notify(new Name('renamed'))
+      sut.item1.name = new Name('renamed')
+      expect(sut.collection.getPositionOf(sut.item1)).toEqual(0)
     })
   })
 })

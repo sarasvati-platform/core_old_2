@@ -6,6 +6,7 @@ import { ManageCollectionStructure } from './commands'
 class Context {
   clear() {
     this.errors = []
+    this.commands = []
     this.noteTypeRepository = new FakeNoteTypeRepository()
     this.noteRepository = new FakeNoteRepository()
     this.cardsRepository = new FakeCardRepository()
@@ -19,7 +20,14 @@ class Context {
     const ec = new CommandContext()
     ec.register('noteTypeRepository', this.noteTypeRepository)
     try { command.execute(ec) } catch (e) { this.addError(e) }
+    this.commands.push(command)
     return command.result as T
+  }
+
+  undo() {
+    const ec = new CommandContext()
+    ec.register('noteTypeRepository', this.noteTypeRepository)
+    this.commands.pop()?.undo(ec)
   }
 
   addError(error: Error) {
@@ -44,6 +52,7 @@ class Context {
   public manageCollection: ManageCollectionStructure
 
   private errors: Error[] = []
+  private commands: Command<any>[] = []
 }
 
 export const context = new Context()

@@ -94,6 +94,32 @@ describe('OrderedMap', () => {
   })
 
   /* -------------------------------------------------------------------------- */
+  /*                                  changeKey                                 */
+  /* -------------------------------------------------------------------------- */
+
+  describe('.changeKey()', () => {
+    it('changes key', () => {
+      sut.collection.changeKey('item0', 'itemX')
+      expect(sut.collection.find('itemX')).toEqual(sut.items[0])
+      expect(sut.collection.find('item0')).toBeUndefined()
+    })
+
+    it('throws an exception if key not found', () => {
+      expect(() => sut.collection.changeKey('not-found', 'itemX')).toThrow('Item \'not-found\' not found')
+    })
+
+    it('throws an exception if new key already exists', () => {
+      expect(() => sut.collection.changeKey('item1', 'item0')).toThrow('Item \'item0\' already exists')
+    })
+
+    it('throws an exception if new key already exists with locale comparer', () => {
+      const map = new OrderedMap<string, NamedItem>(KeyComparers.LocaleCaseInsensitive)
+      map.add('item', sut.external)
+      expect(() => map.changeKey('ITEM', 'item')).toThrow('Item \'item\' already exists')
+    })
+  })
+
+  /* -------------------------------------------------------------------------- */
   /*                                   getPositionOf                            */
   /* -------------------------------------------------------------------------- */
 

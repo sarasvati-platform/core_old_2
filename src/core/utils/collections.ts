@@ -61,6 +61,19 @@ export class OrderedMap<TKey, TItem> {
     }
   }
 
+  changeKey(key: TKey, newKey: TKey) {
+    if (this.getPositionOf(newKey) !== -1) {
+      throw new Error(`Item '${newKey}' already exists`)
+    }
+
+    const index = this.getPositionOf(key)
+    if (index >= 0) {
+      this._items[index][0] = newKey
+    } else {
+      throw new Error(`Item '${key}' not found`)
+    }
+  }
+
   /**
    * Returns the position of an item in the map.
    * @param key Key of the item to find.

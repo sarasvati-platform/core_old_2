@@ -31,10 +31,8 @@ export const noteTypesSteps: StepDefinitions = ({ when, then }) => {
   }))
 
   when(/^User renames '(.*)' note type to '(.*)'$/, ex((name, newName) => {
-    return new RenameNoteType(
-      new Identity(name) as NoteTypeId,
-      new NoteTypeName(newName)
-    )
+    const noteType = ntr().get(new Identity(name) as NoteTypeId)
+    return new RenameNoteType(noteType, new NoteTypeName(newName))
   }))
 
   /* -------------------------------------------------------------------------- */

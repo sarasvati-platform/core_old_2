@@ -30,7 +30,5 @@ export interface ICommand<T> {
 export abstract class Command<T> {
   public result: T | undefined
   public abstract execute(context: CommandContext): void
-  public undo(context: CommandContext): void {
-    throw new Error('Method not implemented.')
-  }
+  public abstract undo(context: CommandContext): void
 }

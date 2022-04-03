@@ -12,7 +12,7 @@ export abstract class FakeRepository<
   protected noteTypes: Map<string, TEntity> = new Map()
 
   public save(noteType: TEntity): void {
-    this.noteTypes.set(noteType.identity.value, Object.create(noteType))
+    this.noteTypes.set(noteType.identity.value, noteType)
   }
 
   public get(identity: TIdentity): TEntity {
@@ -70,14 +70,20 @@ export abstract class FakeRepository<
 
 
 export class FakeNoteTypeRepository extends FakeRepository<NoteTypeId, NoteType> {
+  constructor(private asNormal: boolean=false) {
+    super()
+  }
+
   public override save(noteType: NoteType): void {
+    if (this.asNormal) { super.save(noteType); return }
+
     if (noteType.name.value !== noteType.identity.value) {
       // Because we use name as identity, we need to remove old one
       // and add new one
       this.noteTypes.delete(noteType.identity.value)
-      this.noteTypes.set(noteType.name.value, Object.create(noteType))
+      this.noteTypes.set(noteType.name.value, noteType)
     } else {
-      this.noteTypes.set(noteType.identity.value, Object.create(noteType))
+      this.noteTypes.set(noteType.identity.value, noteType)
     }
   }
   getFieldValue(f: string, o: NoteType) {
