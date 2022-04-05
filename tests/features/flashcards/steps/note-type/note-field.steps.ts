@@ -1,5 +1,5 @@
 import { Identity } from '@src/core/models'
-import { AddFields, ChangeFieldPosition, RemoveField, RenameField } from '@src/flashcards/commands/note-type'
+import { AddField, ChangeFieldPosition, RemoveField, RenameField } from '@src/flashcards/commands/note-type'
 import { NoteFieldName, NoteTypeId } from '@src/flashcards/models'
 import { context, ex } from '@tests/features/flashcards/context'
 import { StepDefinitions } from 'jest-cucumber'
@@ -8,8 +8,8 @@ export const noteTypeFieldsSteps: StepDefinitions = ({ when, then }) => {
   const ntr = () => context.noteTypeRepository
   const getNoteType = (name: string) => ntr().get(new Identity(name) as NoteTypeId)
 
-  const convertFields = (fields: string[]) : NoteFieldName[] => {
-    return fields.map(x => new NoteFieldName(x.replace('<newline>', '\n').replace('<tab>', '\t')))
+  const convertField = (name: string) : NoteFieldName => {
+    return new NoteFieldName(name.replace('<newline>', '\n').replace('<tab>', '\t'))
   }
 
   /* -------------------------------------------------------------------------- */
@@ -17,11 +17,11 @@ export const noteTypeFieldsSteps: StepDefinitions = ({ when, then }) => {
   /* -------------------------------------------------------------------------- */
 
   when(/^User adds '(.*)' field to the '(.*)' note type$/, ex((field: string, noteType) => {
-    return new AddFields(getNoteType(noteType), convertFields([field]))
+    return new AddField(getNoteType(noteType), convertField(field))
   }))
 
   when(/^User adds the following fields to the '(.*)' note type:$/, ex((noteType: string, fields) => {
-    return new AddFields(getNoteType(noteType), convertFields(fields.map(x => x['Field'])))
+    return fields.map(x => new AddField(getNoteType(noteType), convertField(x['Field'])))
   }))
 
   when(/^User removes '(.*)' field from '(.*)' note type$/, ex((fieldName: string, noteType: string) => {

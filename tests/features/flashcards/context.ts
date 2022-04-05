@@ -63,11 +63,15 @@ export const guard = (fn: (...args: any[]) => any) => {
   }
 }
 
-export const ex = (fn: (...args: any[]) => any) => {
+export const ex = (fn: (...args: any[]) => Command<any> | Command<any>[]) => {
   return function(...args: any[]): any {
     try {
       const cmd = fn(...args)
-      return context.execute(cmd)
+      if (Array.isArray(cmd)) {
+        cmd.forEach(c => context.execute(c))
+      } else {
+        return context.execute(cmd)
+      }
     } catch (e) { context.addError(e) }
   }
 }

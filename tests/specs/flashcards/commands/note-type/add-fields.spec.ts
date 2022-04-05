@@ -1,17 +1,17 @@
-import { AddFields } from '@src/flashcards/commands/note-type'
+import { AddField } from '@src/flashcards/commands/note-type'
 import { NoteFieldName, NoteType, NoteTypeName } from '@src/flashcards/models'
 import { Context } from '@tests/specs/flashcards/commands/context'
 
-describe('AddFields', () => {
+describe('AddField', () => {
   let context: Context
   let noteType: NoteType
-  let command: AddFields
+  let command: AddField
 
   beforeEach(() => {
     noteType = new NoteType(new NoteTypeName('test'))
     context = new Context(),
-    command = new AddFields(
-      noteType, [new NoteFieldName('test')]
+    command = new AddField(
+      noteType, new NoteFieldName('test')
     )
     context.noteTypeRepository.save(noteType)
   })

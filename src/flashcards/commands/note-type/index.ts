@@ -1,4 +1,4 @@
-export { AddFields } from './add-fields'
+export { AddField } from './add-field'
 export { ChangeFieldPosition } from './change-field-position'
 export { CreateNoteType } from './create-note-type'
 export { DeleteNoteType } from './delete-note-type'
