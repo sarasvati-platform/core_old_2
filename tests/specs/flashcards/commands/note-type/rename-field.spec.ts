@@ -1,6 +1,6 @@
 import { RenameField } from '@src/flashcards/commands/note-type'
 import { NoteField, NoteFieldName, NoteType, NoteTypeName } from '@src/flashcards/models'
-import { Context } from './context'
+import { Context } from '@tests/specs/flashcards/commands/context'
 
 describe('RenameField', () => {
   let context: Context
@@ -27,13 +27,4 @@ describe('RenameField', () => {
     context.executeAndUndo(command)
     expect(noteType.fields.all[0].name.value).toEqual('test')
   })
-
-  // it('throws an error if the field does not exist', () => {
-  //   const command = new RenameField(
-  //     noteType,
-  //     new NoteFieldName('not-exist'),
-  //     new NoteFieldName('not-exist-new'),
-  //   )
-  //   expect(() => command.execute(context)).toThrow('Field not-exist not found')
-  // })
 })

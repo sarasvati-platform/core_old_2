@@ -1,6 +1,6 @@
 import { AddFields } from '@src/flashcards/commands/note-type'
 import { NoteFieldName, NoteType, NoteTypeName } from '@src/flashcards/models'
-import { Context } from './context'
+import { Context } from '@tests/specs/flashcards/commands/context'
 
 describe('AddFields', () => {
   let context: Context

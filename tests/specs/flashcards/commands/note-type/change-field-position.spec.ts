@@ -1,6 +1,6 @@
 import { ChangeFieldPosition } from '@src/flashcards/commands/note-type'
 import { NoteField, NoteFieldName, NoteType, NoteTypeName } from '@src/flashcards/models'
-import { Context } from './context'
+import { Context } from '@tests/specs/flashcards/commands/context'
 
 describe('ChangeFieldPosition', () => {
   let context: Context
@@ -30,14 +30,4 @@ describe('ChangeFieldPosition', () => {
     context.executeAndUndo(command)
     expect(noteType.fields.all[0].name.value).toEqual('test0')
   })
-
-  // it('throws an error if the field does not exist', () => {
-  //   const command = new ChangeFieldPosition(
-  //     noteType,
-  //     new NoteFieldName('not-exist'),
-  //     0
-  //   )
-  //   expect(() => command.execute(context)).toThrow('Field not-exist not found')
-  // })
-
 })

@@ -1,6 +1,6 @@
 import { RenameNoteType } from '@src/flashcards/commands/note-type'
 import { NoteType, NoteTypeName } from '@src/flashcards/models'
-import { Context } from './context'
+import { Context } from '@tests/specs/flashcards/commands/context'
 
 describe('RenameNoteType', () => {
   let context: Context

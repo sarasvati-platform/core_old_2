@@ -1,7 +1,7 @@
 import { Identity } from '@src/core/models'
 import { CreateNoteType } from '@src/flashcards/commands/note-type'
 import { NoteTypeId, NoteTypeName } from '@src/flashcards/models'
-import { Context } from './context'
+import { Context } from '@tests/specs/flashcards/commands/context'
 
 describe('CreateNoteType', () => {
   let context: Context

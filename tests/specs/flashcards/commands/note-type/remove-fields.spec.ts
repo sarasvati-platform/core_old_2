@@ -1,6 +1,6 @@
 import { RemoveField } from '@src/flashcards/commands/note-type'
 import { NoteField, NoteFieldName, NoteType, NoteTypeName } from '@src/flashcards/models'
-import { Context } from './context'
+import { Context } from '@tests/specs/flashcards/commands/context'
 
 describe('RemoveField', () => {
   let context: Context
@@ -27,12 +27,4 @@ describe('RemoveField', () => {
     context.executeAndUndo(command)
     expect(noteType.fields.all.length).toEqual(1)
   })
-
-  // it('throws an error if the field does not exist', () => {
-  //   const command = new RemoveField(
-  //     noteType,
-  //     new NoteFieldName('not-exist')
-  //   )
-  //   expect(() => command.execute(context)).toThrow('Field not-exist not found')
-  // })
 })
