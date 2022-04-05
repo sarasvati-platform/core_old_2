@@ -1,53 +1,39 @@
-import { CommandContext } from '@src/core/commands/commands'
 import { RenameField } from '@src/flashcards/commands/note-type'
 import { NoteField, NoteFieldName, NoteType, NoteTypeName } from '@src/flashcards/models'
-import { FakeNoteTypeRepository } from '@tests/ports/repositories/fake-note-type-repository'
+import { Context } from './context'
 
 describe('RenameField', () => {
-  let sut: {
-    context: CommandContext,
-    repository: FakeNoteTypeRepository,
-    noteType: NoteType,
-  }
+  let context: Context
+  let noteType: NoteType
+  let command: RenameField
 
   beforeEach(() => {
-    sut = {
-      context: new CommandContext(),
-      repository: new FakeNoteTypeRepository(true),
-      noteType: new NoteType(new NoteTypeName('test'))
-    }
-    sut.noteType.fields.add(new NoteField(new NoteFieldName('test')))
-    sut.repository.save(sut.noteType)
-    sut.context.register('noteTypeRepository', sut.repository)
+    context = new Context(),
+    noteType = new NoteType(new NoteTypeName('test'))
+    noteType.fields.add(new NoteField(new NoteFieldName('test')))
+    command = new RenameField(
+      noteType,
+      new NoteFieldName('test'),
+      new NoteFieldName('new test')
+    )
   })
 
   it('renames a note type', () => {
-    const command = new RenameField(
-      sut.noteType,
-      new NoteFieldName('test'),
-      new NoteFieldName('new test')
-    )
-    command.execute(sut.context)
-    expect(sut.noteType.fields.all[0].name.value).toEqual('new test')
+    context.execute(command)
+    expect(noteType.fields.all[0].name.value).toEqual('new test')
   })
 
   it('undo', () => {
-    const command = new RenameField(
-      sut.noteType,
-      new NoteFieldName('test'),
-      new NoteFieldName('new test')
-    )
-    command.execute(sut.context)
-    command.undo(sut.context)
-    expect(sut.noteType.fields.all[0].name.value).toEqual('test')
+    context.executeAndUndo(command)
+    expect(noteType.fields.all[0].name.value).toEqual('test')
   })
 
   // it('throws an error if the field does not exist', () => {
   //   const command = new RenameField(
-  //     sut.noteType,
+  //     noteType,
   //     new NoteFieldName('not-exist'),
   //     new NoteFieldName('not-exist-new'),
   //   )
-  //   expect(() => command.execute(sut.context)).toThrow('Field not-exist not found')
+  //   expect(() => command.execute(context)).toThrow('Field not-exist not found')
   // })
 })

@@ -3,15 +3,32 @@ import { Identity } from '@src/core/models'
 import { NoteField, NoteFieldName, NoteType, NoteTypeId, NoteTypeName } from '@src/flashcards/models'
 import { INoteTypeRepository } from '@src/flashcards/ports/repositories'
 
-export class CreateNoteType extends Command<NoteType> {
+export abstract class FlashcardCommand<T> extends Command<T> {
+  protected noteTypeRepository: INoteTypeRepository
+
+  public execute(context: CommandContext): void {
+    this.noteTypeRepository = context.get('noteTypeRepository') as INoteTypeRepository
+    this.onExecute()
+  }
+
+  public undo(context: CommandContext): void {
+    this.noteTypeRepository = context.get('noteTypeRepository') as INoteTypeRepository
+    this.onUndo()
+  }
+
+  protected abstract onExecute(): void
+  protected abstract onUndo(): void
+}
+
+
+export class CreateNoteType extends FlashcardCommand<NoteType> {
   constructor(
     private readonly name: NoteTypeName,
     private readonly fields?: NoteField[],
     private readonly identity?: NoteTypeId
   ) { super() }
 
-  execute(context: CommandContext) {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
+  onExecute() {
     this.result = new NoteType(
       this.name,
       this.identity || new Identity() as NoteTypeId
@@ -19,34 +36,32 @@ export class CreateNoteType extends Command<NoteType> {
     for(const field of this.fields || []) {
       this.result.fields.add(field)
     }
-    repository.save(this.result)
+    this.noteTypeRepository.save(this.result)
   }
-  public undo(context: CommandContext): void {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
-    if (this.result) {
-      repository.delete(this.result.identity)
-    }
+
+  public onUndo(): void {
+    if (!this.result) { return }
+    this.noteTypeRepository.delete(this.result.identity)
   }
 }
 
-export class DeleteNoteType extends Command<void> {
-  private noteType: NoteType
+export class DeleteNoteType extends FlashcardCommand<NoteType> {
   constructor(
     private readonly noteTypeId: NoteTypeId
   ) { super() }
 
-  execute(context: CommandContext) {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
-    this.noteType = repository.get(this.noteTypeId)
-    repository.delete(this.noteTypeId)
+  onExecute() {
+    this.result = this.noteTypeRepository.get(this.noteTypeId)
+    this.noteTypeRepository.delete(this.noteTypeId)
   }
-  public undo(context: CommandContext): void {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
-    repository.save(this.noteType)
+
+  public onUndo(): void {
+    if (!this.result) { return }
+    this.noteTypeRepository.save(this.result)
   }
 }
 
-export class RenameNoteType extends Command<void> {
+export class RenameNoteType extends FlashcardCommand<NoteType> {
   private oldName: NoteTypeName
 
   constructor(
@@ -56,84 +71,83 @@ export class RenameNoteType extends Command<void> {
     super()
   }
 
-  execute(context: CommandContext) {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
+  onExecute() {
     this.oldName = this.noteType.name
     this.noteType.rename(this.newName)
-    repository.save(this.noteType)
+    this.noteTypeRepository.save(this.noteType)
   }
 
-  undo(context: CommandContext) {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
+  onUndo() {
     this.noteType.rename(this.oldName)
-    repository.save(this.noteType)
+    this.noteTypeRepository.save(this.noteType)
   }
 }
 
-export class AddFields extends Command<NoteField> {
+export class AddFields extends FlashcardCommand<NoteType> {
   private addedFields: NoteField[] = []
+
   constructor(
     private readonly noteType: NoteType,
     private readonly fieldNames: NoteFieldName[],
   ) { super() }
 
-  public execute(context: CommandContext): void {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
+  public onExecute(): void {
     for (const fieldName of this.fieldNames) {
       const noteField = new NoteField(fieldName)
       this.noteType.fields.add(noteField)
       this.addedFields.push(noteField)
     }
-    repository.save(this.noteType)
+    this.noteTypeRepository.save(this.noteType)
   }
-  public undo(context: CommandContext): void {
+
+  public onUndo(): void {
     this.addedFields.forEach(x => this.noteType.fields.remove(x))
+    this.noteTypeRepository.save(this.noteType)
   }
 }
 
-export class RemoveField extends Command<NoteField> {
+export class RemoveField extends FlashcardCommand<NoteType> {
   private removedField: NoteField
+
   constructor(
     private readonly noteType: NoteType,
     private readonly fieldName: NoteFieldName,
   ) { super() }
 
-  public execute(context: CommandContext): void {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
+  public onExecute(): void {
     const field = this.noteType.fields.getByName(this.fieldName.value)
     this.noteType.fields.remove(field)
     this.removedField = field
-    repository.save(this.noteType)
+    this.noteTypeRepository.save(this.noteType)
   }
-  public undo(context: CommandContext): void {
+
+  public onUndo(): void {
     this.noteType.fields.add(this.removedField)
   }
 }
 
 
-export class RenameField extends Command<NoteField> {
+export class RenameField extends FlashcardCommand<NoteType> {
   constructor(
     private readonly noteType: NoteType,
     private readonly oldFieldName: NoteFieldName,
     private readonly newFieldName: NoteFieldName,
   ) { super() }
 
-  public execute(context: CommandContext): void {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
+  public onExecute(): void {
     const field = this.noteType.fields.getByName(this.oldFieldName.value)
     field.rename(this.newFieldName)
-    repository.save(this.noteType)
+    this.noteTypeRepository.save(this.noteType)
   }
 
-  public undo(context: CommandContext): void {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
+  public onUndo(): void {
     const field = this.noteType.fields.getByName(this.newFieldName.value)
     field.rename(this.oldFieldName)
-    repository.save(this.noteType)
+    this.noteTypeRepository.save(this.noteType)
   }
 }
 
-export class ChangeFieldPosition extends Command<NoteField> {
+export class ChangeFieldPosition extends FlashcardCommand<NoteType> {
   private oldPosition: number
 
   constructor(
@@ -142,17 +156,16 @@ export class ChangeFieldPosition extends Command<NoteField> {
     private readonly position: number,
   ) { super() }
 
-  public execute(context: CommandContext): void {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
+  public onExecute(): void {
     const field = this.noteType.fields.getByName(this.fieldName.value)
     this.oldPosition = this.noteType.fields.getPositionOf(field)
     this.noteType.fields.setPositionOf(field).to(this.position)
-    repository.save(this.noteType)
+    this.noteTypeRepository.save(this.noteType)
   }
-  public undo(context: CommandContext): void {
-    const repository = context.get('noteTypeRepository') as INoteTypeRepository
+
+  public onUndo(): void {
     const field = this.noteType.fields.getByName(this.fieldName.value)
     this.noteType.fields.setPositionOf(field).to(this.oldPosition)
-    repository.save(this.noteType)
+    this.noteTypeRepository.save(this.noteType)
   }
 }

@@ -1,39 +1,26 @@
-import { CommandContext } from '@src/core/commands/commands'
 import { DeleteNoteType } from '@src/flashcards/commands/note-type'
 import { NoteType, NoteTypeName } from '@src/flashcards/models'
-import { FakeNoteTypeRepository } from '@tests/ports/repositories/fake-note-type-repository'
+import { Context } from './context'
 
 describe('DeleteNoteType', () => {
-  let sut: {
-    context: CommandContext,
-    repository: FakeNoteTypeRepository,
-    noteType: NoteType,
-  }
+  let context: Context
+  let noteType: NoteType
+  let command: DeleteNoteType
 
   beforeEach(() => {
-    sut = {
-      context: new CommandContext(),
-      repository: new FakeNoteTypeRepository(true),
-      noteType: new NoteType(new NoteTypeName('test'))
-    }
-    sut.repository.save(sut.noteType)
-    sut.context.register('noteTypeRepository', sut.repository)
+    context = new Context()
+    noteType = new NoteType(new NoteTypeName('test'))
+    command = new DeleteNoteType(noteType.identity)
+    context.noteTypeRepository.save(noteType)
   })
 
-  it('renames a note type', () => {
-    const command = new DeleteNoteType(
-      sut.noteType.identity
-    )
-    command.execute(sut.context)
-    expect(sut.repository.exists(sut.noteType.identity)).toBeFalsy()
+  it('.execute()', () => {
+    context.execute(command)
+    expect(context.noteTypeRepository.exists(noteType.identity)).toBeFalsy()
   })
 
-  it('undo', () => {
-    const command = new DeleteNoteType(
-      sut.noteType.identity
-    )
-    command.execute(sut.context)
-    command.undo(sut.context)
-    expect(sut.repository.exists(sut.noteType.identity)).toBeTruthy()
+  it('.undo()', () => {
+    context.executeAndUndo(command)
+    expect(context.noteTypeRepository.exists(noteType.identity)).toBeTruthy()
   })
 })
